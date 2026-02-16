@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plaza Le Rizz — Montreal's Premier Reception Hall</title>
+  <meta name="description"
+    content="Plaza le Rizz, Montreal's top wedding venue since 1971. Timeless elegance, exceptional service, unforgettable memories.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400;1,500;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* =============================================
+       TOKENS — Strict Luxury / Editorial DNA
+       ============================================= */
+    :root {
+      --bg: #F9F8F6;
+      --fg: #1A1A1A;
+      --gold: #D4AF37;
+      --grey-100: #F0EEEB;
+      --grey-200: #E0DDD8;
+      --grey-400: #999590;
+      --grey-600: #66635E;
+      --white: #FEFDFB;
+
+      --serif: 'Playfair Display', 'Georgia', serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur-slow: 1500ms;
+      --dur-med: 800ms;
+      --dur-base: 400ms;
+
+      --col: calc(100% / 12);
+      --gutter: 24px;
+      --max-w: 1440px;
+      --rail: clamp(20px, 4vw, 80px);
+    }
+
+    /* =============================================
+       RESET
+       ============================================= */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--sans);
+      font-weight: 400;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ::selection {
+      background: var(--gold);
+      color: var(--fg);
+    }
+
+    /* =============================================
+       PAPER GRAIN — Fixed SVG Noise
+       ============================================= */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.015;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* =============================================
+       VISIBLE MAGAZINE GRID (4 lines)
+       ============================================= */
+    .magazine-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--rail);
+    }
+
+    .magazine-grid::before,
+    .magazine-grid::after,
+    .magazine-grid span {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 100%;
+      background: rgba(26, 26, 26, 0.05);
+      justify-self: end;
+    }
+
+    .magazine-grid span:first-child {
+      justify-self: start;
+    }
+
+    /* =============================================
+       TYPOGRAPHY
+       ============================================= */
+    .label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--grey-400);
+    }
+
+    .label--gold {
+      color: var(--gold);
+    }
+
+    .display {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(3.5rem, 9vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+    }
+
+    .h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.5rem, 5.5vw, 5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+    }
+
+    .h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+      line-height: 1.3;
+    }
+
+    .body-text {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--grey-600);
+      max-width: 480px;
+    }
+
+    em,
+    .italic {
+      font-style: italic;
+    }
+
+    /* =============================================
+       LAYOUT
+       ============================================= */
+    .wrap {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--rail);
+      position: relative;
+      z-index: 2;
+    }
+
+    .sect {
+      padding: clamp(6rem, 12vw, 12rem) 0;
+    }
+
+    .border-t {
+      border-top: 1px solid var(--grey-200);
+    }
+
+    /* =============================================
+       BUTTONS — Strict Rectangle
+       ============================================= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      border: 1px solid var(--fg);
+      background: transparent;
+      color: var(--fg);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0;
+      transition: color var(--dur-med) var(--ease);
+    }
+
+    .btn__fill {
+      position: absolute;
+      inset: 0;
+      background: var(--fg);
+      transform: translateX(-101%);
+      transition: transform var(--dur-med) var(--ease);
+      z-index: 0;
+    }
+
+    .btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn:hover .btn__fill {
+      transform: translateX(0);
+    }
+
+    .btn:hover {
+      color: var(--bg);
+    }
+
+    .btn--gold {
+      border-color: var(--gold);
+    }
+
+    .btn--gold .btn__fill {
+      background: var(--gold);
+    }
+
+    .btn--gold:hover {
+      color: var(--fg);
+    }
+
+    .btn--solid {
+      background: var(--fg);
+      color: var(--bg);
+      border-color: var(--fg);
+    }
+
+    .btn--solid .btn__fill {
+      background: var(--gold);
+    }
+
+    .btn--solid:hover {
+      color: var(--fg);
+    }
+
+    /* =============================================
+       NAV
+       ============================================= */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      padding: 20px 0;
+      transition: background var(--dur-med) var(--ease),
+        backdrop-filter var(--dur-med) var(--ease),
+        padding var(--dur-med) var(--ease);
+    }
+
+    .nav--scrolled {
+      background: rgba(249, 248, 246, 0.95);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 14px 0;
+      border-bottom: 1px solid var(--grey-200);
+    }
+
+    .nav__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__logo img {
+      height: 44px;
+      width: auto;
+      transition: opacity var(--dur-base) var(--ease);
+    }
+
+    .nav__logo:hover img {
+      opacity: 0.6;
+    }
+
+    .nav__menu {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav__menu a {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      position: relative;
+      transition: color var(--dur-base) var(--ease);
+    }
+
+    .nav__menu a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width var(--dur-base) var(--ease);
+    }
+
+    .nav__menu a:hover {
+      color: var(--grey-400);
+    }
+
+    .nav__menu a:hover::after {
+      width: 100%;
+    }
+
+    .nav__cta {
+      font-size: 9px !important;
+      padding: 10px 24px;
+      border: 1px solid var(--fg);
+      transition: all var(--dur-base) var(--ease);
+    }
+
+    .nav__cta:hover {
+      background: var(--fg);
+      color: var(--bg) !important;
+    }
+
+    .nav__cta::after {
+      display: none !important;
+    }
+
+    .nav__burger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 28px;
+      height: 20px;
+      position: relative;
+      z-index: 1000;
+    }
+
+    .nav__burger i {
+      display: block;
+      width: 100%;
+      height: 1.5px;
+      background: var(--fg);
+      position: absolute;
+      left: 0;
+      transition: all var(--dur-base) var(--ease);
+    }
+
+    .nav__burger i:nth-child(1) {
+      top: 0;
+    }
+
+    .nav__burger i:nth-child(2) {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .nav__burger i:nth-child(3) {
+      bottom: 0;
+    }
+
+    .nav__burger.open i:nth-child(1) {
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      background: var(--fg);
+    }
+
+    .nav__burger.open i:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav__burger.open i:nth-child(3) {
+      bottom: 50%;
+      transform: translateY(50%) rotate(-45deg);
+      background: var(--fg);
+    }
+
+    /* Ensure nav and burger are on top when menu is open */
+    .nav.nav--menu-open {
+      z-index: 900;
+    }
+
+    .nav.nav--menu-open .nav__burger {
+      z-index: 1000;
+      position: relative;
+    }
+
+    /* Mobile overlay */
+    .overlay-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 550;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 var(--rail);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-med) var(--ease);
+    }
+
+    .overlay-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .overlay-menu a {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 400;
+      line-height: 1.4;
+      transition: color var(--dur-base) var(--ease);
+    }
+
+    .overlay-menu a:hover {
+      color: var(--gold);
+    }
+
+    .overlay-menu .label {
+      margin-top: 3rem;
+    }
+
+    /* =============================================
+       HERO — Editorial, NO full-bleed image
+       ============================================= */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: clamp(3rem, 6vw, 6rem);
+      padding-top: 120px;
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--gutter);
+      align-items: end;
+      width: 100%;
+    }
+
+    .hero__text {
+      padding-bottom: 2rem;
+    }
+
+    .hero__label {
+      margin-bottom: 2rem;
+    }
+
+    .hero__title {
+      margin-bottom: 3rem;
+    }
+
+    .hero__actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero__phone {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--grey-400);
+      transition: color var(--dur-base) var(--ease);
+    }
+
+    .hero__phone:hover {
+      color: var(--fg);
+    }
+
+    .hero__phone img {
+      width: 14px;
+      opacity: 0.5;
+    }
+
+    .hero__image {
+      position: relative;
+      overflow: hidden;
+      height: 70vh;
+      min-height: 400px;
+    }
+
+    .hero__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--dur-slow) var(--ease);
+      display: block;
+    }
+
+    .hero__image:hover img {
+      transform: scale(1.03);
+    }
+
+    .hero__address {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--grey-200);
+    }
+
+    .hero__address img {
+      width: 12px;
+      opacity: 0.4;
+    }
+
+    .hero__address span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey-400);
+    }
+
+    /* =============================================
+       INTRO — 8/4 Asymmetric Split
+       ============================================= */
+    .intro__grid {
+      display: grid;
+      grid-template-columns: 8fr 4fr;
+      gap: calc(var(--gutter) * 3);
+      align-items: start;
+    }
+
+    .intro__content {
+      padding-top: 2rem;
+    }
+
+    .intro__content .label {
+      margin-bottom: 1.5rem;
+    }
+
+    .intro__content .h1 {
+      margin-bottom: 2rem;
+    }
+
+    .intro__content .body-text {
+      margin-bottom: 3rem;
+    }
+
+    .intro__aside {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gutter);
+    }
+
+    .intro__aside-img {
+      overflow: hidden;
+      /* Signature Roman Arch — only allowed exception */
+      border-radius: 200px 200px 0 0;
+    }
+
+    .intro__aside-img img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      transition: transform var(--dur-slow) var(--ease);
+    }
+
+    .intro__aside-img:hover img {
+      transform: scale(1.03);
+    }
+
+    /* =============================================
+       SERVICES — Horizontal Ruled Cards
+       ============================================= */
+    .services__list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--grey-200);
+    }
+
+    .svc {
+      padding: 3rem 2.5rem;
+      border-bottom: 1px solid var(--grey-200);
+      position: relative;
+      transition: background var(--dur-med) var(--ease);
+    }
+
+    /* Vertical dividers using pseudo-elements for perfect alignment */
+    .svc:not(:first-child)::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 2rem;
+      bottom: 2rem;
+      width: 1px;
+      background: var(--grey-200);
+    }
+
+    .svc:hover {
+      background: var(--grey-100);
+    }
+
+    .svc__number {
+      font-family: var(--serif);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    .svc__icon {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+
+    .svc__title {
+      margin-bottom: 1rem;
+    }
+
+    .svc__desc {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--grey-600);
+      margin-bottom: 2rem;
+      max-width: 320px;
+    }
+
+    .svc__link {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color var(--dur-base) var(--ease);
+    }
+
+    .svc__link:hover {
+      color: var(--gold);
+    }
+
+    .svc__link svg {
+      width: 14px;
+      height: 14px;
+      transition: transform var(--dur-base) var(--ease);
+    }
+
+    .svc:hover .svc__link svg {
+      transform: translateX(4px);
+    }
+
+    /* =============================================
+       LOBBY — Dark Cinematic Band (7/5 split)
+       ============================================= */
+    .lobby {
+      background: var(--fg);
+      color: var(--bg);
+      overflow: hidden;
+    }
+
+    .lobby__grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      min-height: 80vh;
+    }
+
+    .lobby__img {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .lobby__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 2s var(--ease);
+    }
+
+    .lobby__img:hover img {
+      transform: scale(1.03);
+    }
+
+    .lobby__body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(3rem, 6vw, 6rem);
+    }
+
+    .lobby__body .label--gold {
+      margin-bottom: 1.5rem;
+    }
+
+    .lobby__body .h1 {
+      margin-bottom: 2rem;
+    }
+
+    .lobby__body .body-text {
+      color: rgba(249, 248, 246, 0.5);
+      margin-bottom: 3rem;
+    }
+
+    .lobby__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gutter);
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(249, 248, 246, 0.08);
+    }
+
+    .lstat__label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(249, 248, 246, 0.3);
+      margin-bottom: 6px;
+    }
+
+    .lstat__val {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 2.5vw, 2rem);
+      font-weight: 400;
+      color: var(--gold);
+    }
+
+    /* =============================================
+       CULINARY — 7/5 Reversed
+       ============================================= */
+    .culinary__grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: calc(var(--gutter) * 3);
+      align-items: end;
+    }
+
+    .culinary__img {
+      overflow: hidden;
+      max-height: 560px;
+    }
+
+    .culinary__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--dur-slow) var(--ease);
+    }
+
+    .culinary__img:hover img {
+      transform: scale(1.03);
+    }
+
+    .culinary__text {
+      padding-bottom: 3rem;
+    }
+
+    .culinary__text .label {
+      margin-bottom: 1.5rem;
+    }
+
+    .culinary__text .h2 {
+      margin-bottom: 2rem;
+    }
+
+    .culinary__text .body-text {
+      margin-bottom: 3rem;
+    }
+
+    /* =============================================
+       GALLERY STRIP — 4 small curated pieces
+       ============================================= */
+    .gallery {
+      padding: 0;
+      border-top: 1px solid var(--grey-200);
+      border-bottom: 1px solid var(--grey-200);
+    }
+
+    .gallery__row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .gallery__cell {
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      border-right: 1px solid var(--grey-200);
+    }
+
+    .gallery__cell:last-child {
+      border-right: none;
+    }
+
+    .gallery__cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--dur-slow) var(--ease);
+    }
+
+    .gallery__cell:hover img {
+      transform: scale(1.03);
+    }
+
+    /* =============================================
+       TESTIMONIALS
+       ============================================= */
+    .testi__head {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--gutter);
+      margin-bottom: clamp(3rem, 6vw, 5rem);
+    }
+
+    .testi__head .body-text {
+      margin-top: 1rem;
+    }
+
+    .testi__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--grey-200);
+    }
+
+    .tcard {
+      padding: 3rem 2.5rem 3rem 0;
+      border-bottom: 1px solid var(--grey-200);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 280px;
+    }
+
+    .tcard+.tcard {
+      border-left: 1px solid var(--grey-200);
+      padding-left: 2.5rem;
+    }
+
+    .tcard__quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--fg);
+      position: relative;
+      padding-top: 2rem;
+    }
+
+    .tcard__quote::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 24px;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .tcard__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .tcard__name {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .tcard__stars {
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      font-weight: 500;
+    }
+
+    /* =============================================
+       BLOG / JOURNAL — Ruled Cards (matches Services)
+       ============================================= */
+    .blog__head {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--gutter);
+      margin-bottom: clamp(3rem, 6vw, 5rem);
+    }
+
+    .blog__head .label {
+      margin-bottom: 1.5rem;
+    }
+
+    .blog__head-sub {
+      align-self: end;
+    }
+
+    .blog__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--grey-200);
+    }
+
+    .bcard {
+      padding: 3rem 2.5rem 3rem 0;
+      border-bottom: 1px solid var(--grey-200);
+    }
+
+    .bcard+.bcard {
+      border-left: 1px solid var(--grey-200);
+      padding-left: 2.5rem;
+    }
+
+    .bcard__number {
+      font-family: var(--serif);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    .bcard__img {
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .bcard__img img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      transition: transform var(--dur-slow) var(--ease);
+    }
+
+    .bcard:hover .bcard__img img {
+      transform: scale(1.03);
+    }
+
+    .bcard__meta {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--grey-400);
+      margin-bottom: 0.75rem;
+    }
+
+    .bcard__title {
+      font-family: var(--serif);
+      font-size: clamp(1rem, 1.4vw, 1.3rem);
+      font-weight: 500;
+      line-height: 1.35;
+      margin-bottom: 0.75rem;
+    }
+
+    .bcard__excerpt {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--grey-600);
+      margin-bottom: 1.25rem;
+    }
+
+    .bcard__link {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color var(--dur-base) var(--ease);
+    }
+
+    .bcard__link:hover {
+      color: var(--gold);
+    }
+
+    .bcard__link svg {
+      width: 14px;
+      height: 14px;
+      transition: transform var(--dur-base) var(--ease);
+    }
+
+    .bcard:hover .bcard__link svg {
+      transform: translateX(4px);
+    }
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    .foot {
+      background: var(--fg);
+      color: var(--bg);
+      padding: clamp(4rem, 8vw, 8rem) 0 2rem;
+    }
+
+    .foot__grid {
+      display: grid;
+      grid-template-columns: 5fr 2fr 2fr 2fr;
+      gap: var(--gutter);
+      margin-bottom: 5rem;
+    }
+
+    .foot__brand img {
+      height: 36px;
+      filter: invert(1);
+      margin-bottom: 1.5rem;
+    }
+
+    .foot__brand p {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(249, 248, 246, 0.4);
+      max-width: 300px;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .foot__socials {
+      display: flex;
+      gap: 12px;
+    }
+
+    .foot__socials a {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(249, 248, 246, 0.12);
+      transition: all var(--dur-base) var(--ease);
+    }
+
+    .foot__socials a:hover {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: var(--fg);
+    }
+
+    .foot__socials svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .foot__col-title {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(249, 248, 246, 0.25);
+      margin-bottom: 1.5rem;
+    }
+
+    .foot__links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .foot__links a {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(249, 248, 246, 0.5);
+      transition: color var(--dur-base) var(--ease);
+    }
+
+    .foot__links a:hover {
+      color: var(--gold);
+    }
+
+    .foot__legal {
+      border-top: 1px solid rgba(249, 248, 246, 0.06);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: rgba(249, 248, 246, 0.2);
+      letter-spacing: 0.05em;
+    }
+
+    .foot__legal-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .foot__legal a {
+      color: rgba(249, 248, 246, 0.2);
+    }
+
+    .foot__legal a:hover {
+      color: var(--gold);
+    }
+
+    /* =============================================
+       GSAP REVEAL STATES - Content visible by default
+       ============================================= */
+    .gsap-reveal,
+    .gsap-reveal-left,
+    .gsap-reveal-right,
+    .gsap-scale,
+    .gsap-hero-text,
+    .gsap-hero-image,
+    .gsap-hero-address,
+    .gsap-gallery-cell,
+    .gsap-service-card,
+    .gsap-testi-card,
+    .gsap-blog-card,
+    .gsap-parallax-img {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Ensure content is visible before GSAP loads */
+    html:not(.gsap-loaded) .gsap-reveal,
+    html:not(.gsap-loaded) .gsap-reveal-left,
+    html:not(.gsap-loaded) .gsap-reveal-right,
+    html:not(.gsap-loaded) .gsap-hero-text,
+    html:not(.gsap-loaded) .gsap-hero-image,
+    html:not(.gsap-loaded) .gsap-hero-address {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    /* =============================================
+       RESPONSIVE
+       ============================================= */
+    @media (max-width: 1024px) {
+      .nav__menu {
+        display: none;
+      }
+
+      .nav__burger {
+        display: block;
+      }
+
+      .hero__grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .hero__image {
+        max-height: 50vh;
+      }
+
+      .intro__grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .intro__aside {
+        flex-direction: row;
+      }
+
+      .intro__aside-img img {
+        height: 260px;
+      }
+
+      .services__list {
+        grid-template-columns: 1fr;
+      }
+
+      .svc {
+        padding: 2.5rem 0;
+      }
+
+      .svc:not(:first-child)::before {
+        display: none;
+      }
+
+      .lobby__grid {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .lobby__img {
+        max-height: 50vh;
+      }
+
+      .culinary__grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .culinary__img {
+        max-height: 400px;
+      }
+
+      .gallery__row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .testi__head {
+        grid-template-columns: 1fr;
+      }
+
+      .testi__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tcard+.tcard {
+        border-left: none;
+        padding-left: 0;
+      }
+
+      .blog__head {
+        grid-template-columns: 1fr;
+      }
+
+      .blog__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bcard+.bcard {
+        border-left: none;
+        padding-left: 0;
+      }
+
+      .foot__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        min-height: auto;
+        padding-top: 100px;
+        padding-bottom: 3rem;
+      }
+
+      .hero__image {
+        max-height: 40vh;
+      }
+
+      .intro__aside {
+        flex-direction: column;
+      }
+
+      .gallery__row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .gallery__cell {
+        aspect-ratio: 1;
+      }
+
+      .lobby__stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .foot__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .foot__legal {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- No-JS Fallback -->
+  <noscript>
+    <style>
+      .gsap-reveal,
+      .gsap-reveal-left,
+      .gsap-reveal-right,
+      .gsap-hero-text,
+      .gsap-hero-image,
+      .gsap-hero-address,
+      .gsap-gallery-cell,
+      .gsap-service-card,
+      .gsap-testi-card,
+      .gsap-blog-card {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    </style>
+  </noscript>
+
+  <!-- PAPER GRAIN -->
+  <svg class="grain" viewBox="0 0 512 512" preserveAspectRatio="none">
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noise)" />
+  </svg>
+
+  <!-- MAGAZINE GRID LINES -->
+  <div class="magazine-grid"><span></span><span></span></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="wrap nav__bar">
+      <a href="#" class="nav__logo">
+        <img src="./assets/images/63dc0a237cfcf45bda8fe217_black with pmg trans2.png" alt="Plaza Le Rizz">
+      </a>
+      <ul class="nav__menu">
+        <li><a href="#">Weddings</a></li>
+        <li><a href="#">Events</a></li>
+        <li><a href="#">Our Food</a></li>
+        <li><a href="#">View Halls</a></li>
+        <li><a href="#" class="nav__cta">Message Us</a></li>
+      </ul>
+      <button class="nav__burger" id="burger" aria-label="Toggle menu">
+        <i></i><i></i><i></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE OVERLAY -->
+  <div class="overlay-menu" id="overlay">
+    <a href="#">Weddings</a>
+    <a href="#">Events</a>
+    <a href="#">Our Food</a>
+    <a href="#">View Halls</a>
+    <p class="label" style="margin-top:3rem">
+      <a href="#" style="color:var(--grey-400)">Message Us &rarr;</a>
+    </p>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero__grid">
+        <div class="hero__text">
+          <p class="label label--gold hero__label gsap-hero-text">Welcome to Plaza Le Rizz</p>
+          <h1 class="display hero__title gsap-hero-text">Where <em>Tasteful</em><br>Creations Begin.</h1>
+          <div class="hero__actions gsap-hero-text">
+            <a href="#" class="btn btn--solid">
+              <div class="btn__fill"></div>
+              <span>Get a Free Quote</span>
+            </a>
+            <a href="tel:5143262700" class="hero__phone">
+              <img src="./assets/images/63dcab1cf7fe1a5039ab47dc_phone-call.png" alt="">
+              (514) 326-2700
+            </a>
+          </div>
+        </div>
+        <div class="hero__image gsap-hero-image">
+          <img src="./assets/images/63fa3dca8bac0a8dcb4b41a6_Lerizz-49-IMG_6695--2.jpg"
+            alt="Plaza Le Rizz reception hall">
+        </div>
+        <div class="hero__address gsap-hero-address">
+          <img src="./assets/images/63dc140f1b5928390cbb671b_pin.png" alt="">
+          <span>6630 Jarry Est, St-L&eacute;onard, Qc H1P 1W3</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <section class="sect border-t gsap-section" id="intro">
+    <div class="wrap">
+      <div class="intro__grid">
+        <div class="intro__content gsap-reveal">
+          <p class="label label--gold">Est. 1971</p>
+          <h2 class="h1">What <em>Le Rizz</em><br>Has To Offer</h2>
+          <p class="body-text">Welcome to Plaza le Rizz, Montreal's top wedding venue since 1971. With timeless elegance
+            and exceptional service, our halls provide the perfect setting for your special day. Let us help you create
+            unforgettable memories.</p>
+          <a href="#" class="btn">
+            <div class="btn__fill"></div>
+            <span>Discover More</span>
+          </a>
+        </div>
+        <div class="intro__aside gsap-reveal-right">
+          <div class="intro__aside-img gsap-parallax-img">
+            <img src="./assets/images/63ed5aee005156900b04a952_IMG_1612-3.jpg" alt="Elegant reception">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY STRIP -->
+  <div class="gallery gsap-section">
+    <div class="gallery__row">
+      <div class="gallery__cell gsap-gallery-cell">
+        <img class="gsap-parallax-img" src="./assets/images/63fa3cb3f86571b2cefb595f_Lerizz-81-C10_6572-.jpg"
+          alt="Le Rizz interior">
+      </div>
+      <div class="gallery__cell gsap-gallery-cell">
+        <img class="gsap-parallax-img" src="./assets/images/63eea0359f778e09dc4fba90_IMG_2210.jpg" alt="Event lighting">
+      </div>
+      <div class="gallery__cell gsap-gallery-cell">
+        <img class="gsap-parallax-img" src="./assets/images/63ed5aee005156900b04a952_IMG_1612-3.jpg"
+          alt="Reception setup">
+      </div>
+      <div class="gallery__cell gsap-gallery-cell">
+        <img class="gsap-parallax-img" src="./assets/images/63eea035f4861ae6d983a536_IMG_2841.jpg"
+          alt="Floral arrangement">
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="sect gsap-section" id="services">
+    <div class="wrap">
+      <div style="margin-bottom: clamp(3rem, 6vw, 5rem);" class="gsap-reveal">
+        <p class="label label--gold" style="margin-bottom: 1.5rem;">Our Expertise</p>
+        <h2 class="h1">Crafted for Every<br><em>Occasion</em></h2>
+      </div>
+      <div class="services__list">
+        <div class="svc gsap-service-card">
+          <div class="svc__number">01</div>
+          <img class="svc__icon" src="./assets/images/63f93914e3c0fd73d1bc90a2_wedding-rings.png" alt="">
+          <h3 class="h3 svc__title">Weddings</h3>
+          <p class="svc__desc">Our team of experienced event planners will work with you every step of the way to create
+            the wedding of your dreams.</p>
+          <a href="#" class="svc__link">
+            Learn More
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+        <div class="svc gsap-service-card">
+          <div class="svc__number">02</div>
+          <img class="svc__icon" src="./assets/images/63f939d106c414f2dc8bf971_mirror-ball.png" alt="">
+          <h3 class="h3 svc__title">Social Events</h3>
+          <p class="svc__desc">The perfect place to host your next celebration, whether it's a birthday party,
+            anniversary, or a special occasion like NYE.</p>
+          <a href="#" class="svc__link">
+            Learn More
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+        <div class="svc gsap-service-card">
+          <div class="svc__number">03</div>
+          <img class="svc__icon" src="./assets/images/63fc0b02a506ca66023fc990_tribune.png" alt="">
+          <h3 class="h3 svc__title">Corporate Events</h3>
+          <p class="svc__desc">The ideal location for your next corporate gathering, from team building retreats to
+            product launches and company celebrations.</p>
+          <a href="#" class="svc__link">
+            Learn More
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOBBY -->
+  <section class="lobby gsap-section" id="lobby">
+    <div class="lobby__grid">
+      <div class="lobby__img gsap-reveal-left">
+        <img class="gsap-parallax-img" src="./assets/images/63eea036f0180ff1e9a71e5a_IMG_2880.jpg" alt="Le Rizz lobby">
+      </div>
+      <div class="lobby__body gsap-reveal-right">
+        <p class="label label--gold">The Venue</p>
+        <h2 class="h1">Our Newly<br>Designed <em>Lobby</em></h2>
+        <p class="body-text">Plaza Le Rizz is an exceptional reception hall that can accommodate a wide range of events,
+          from intimate gatherings of 80 guests to grand celebrations of up to 1500 attendees. Our newly designed lobby
+          provides a warm and inviting ambiance.</p>
+        <a href="#" class="btn" style="border-color: rgba(249,248,246,0.2); color: var(--bg);">
+          <div class="btn__fill" style="background: var(--gold);"></div>
+          <span>Book an Event</span>
+        </a>
+        <div class="lobby__stats gsap-stagger-stats">
+          <div class="gsap-stat-item">
+            <p class="lstat__label">A Total of</p>
+            <p class="lstat__val">3 Halls</p>
+          </div>
+          <div class="gsap-stat-item">
+            <p class="lstat__label">Up to</p>
+            <p class="lstat__val">1,500 Guests</p>
+          </div>
+          <div class="gsap-stat-item">
+            <p class="lstat__label">Open Since</p>
+            <p class="lstat__val">1971</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CULINARY -->
+  <section class="sect border-t gsap-section" id="culinary">
+    <div class="wrap">
+      <div class="culinary__grid">
+        <div class="culinary__img gsap-reveal-left">
+          <img class="gsap-parallax-img" src="./assets/images/63eea036f0180ff1e9a71e5a_IMG_2880.jpg"
+            alt="Culinary creations">
+        </div>
+        <div class="culinary__text gsap-reveal-right">
+          <p class="label label--gold">The Kitchen</p>
+          <h2 class="h2">Discover Our<br>Culinary <em>Creations</em></h2>
+          <p class="body-text">From elegant hors d'oeuvres to decadent desserts, every course is carefully crafted to
+            ensure that your meal is a truly memorable experience. Our talented chefs will work with you to create a
+            menu that perfectly complements your event.</p>
+          <a href="#" class="btn">
+            <div class="btn__fill"></div>
+            <span>Food Gallery</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="sect border-t gsap-section" id="testimonials">
+    <div class="wrap">
+      <div class="testi__head gsap-reveal">
+        <div>
+          <p class="label label--gold" style="margin-bottom: 1.5rem;">Kind Words</p>
+          <h2 class="h1">What Our <em>Guests</em><br>Have To Say</h2>
+        </div>
+        <div style="align-self: end;">
+          <p class="body-text">Over 300+ positive reviews on Google. You are sure to be in great hands for your next
+            event.</p>
+        </div>
+      </div>
+      <div class="testi__grid">
+        <div class="tcard gsap-testi-card">
+          <p class="tcard__quote">Wonderful staff! They even took dessert from the party next door to serve at ours.
+            Can't argue with that level of service.</p>
+          <div class="tcard__footer">
+            <span class="tcard__name">Anthony R.</span>
+            <span class="tcard__stars">&#9733; 5 / 5</span>
+          </div>
+        </div>
+        <div class="tcard gsap-testi-card">
+          <p class="tcard__quote">Hands down the best food I've ever had at a reception hall. Great lighting and decor.
+            I will gladly recommend to anyone.</p>
+          <div class="tcard__footer">
+            <span class="tcard__name">PIX XX</span>
+            <span class="tcard__stars">&#9733; 5 / 5</span>
+          </div>
+        </div>
+        <div class="tcard gsap-testi-card">
+          <p class="tcard__quote">Excellent table service. Best wedding meal ever for my husband. Evening buffet also
+            excellent. Loved the fruit table!</p>
+          <div class="tcard__footer">
+            <span class="tcard__name">Karen W.</span>
+            <span class="tcard__stars">&#9733; 5 / 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG / JOURNAL -->
+  <section class="sect border-t gsap-section" id="blog">
+    <div class="wrap">
+      <div class="blog__head gsap-reveal">
+        <div>
+          <p class="label label--gold">Journal</p>
+          <h2 class="h1">Read Our <em>Blog</em></h2>
+        </div>
+        <div class="blog__head-sub">
+          <p class="body-text">Insights on planning your perfect event, from ceremonies to celebrations.</p>
+        </div>
+      </div>
+      <div class="blog__grid">
+        <article class="bcard gsap-blog-card">
+          <div class="bcard__number">01</div>
+          <div class="bcard__img">
+            <img class="gsap-parallax-img" src="./assets/images/64044047a2b65319585bd962_66hhh6hhtrdf.jpg"
+              alt="Wedding ceremony">
+          </div>
+          <p class="bcard__meta">Weddings</p>
+          <h3 class="bcard__title">How To Create an Unforgettable Wedding Ceremony</h3>
+          <p class="bcard__excerpt">Your ceremony should reflect your love story and be tailored to your unique style.
+          </p>
+          <a href="#" class="bcard__link">
+            Read Article
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </article>
+        <article class="bcard gsap-blog-card">
+          <div class="bcard__number">02</div>
+          <div class="bcard__img">
+            <img class="gsap-parallax-img" src="./assets/images/64043c0fa05a6b560f553c49_5643rwews.jpg"
+              alt="Wedding themes">
+          </div>
+          <p class="bcard__meta">Inspiration</p>
+          <h3 class="bcard__title">Unique Wedding Themes and Ideas</h3>
+          <p class="bcard__excerpt">Customizable packages to fit your style and budget.</p>
+          <a href="#" class="bcard__link">
+            Read Article
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </article>
+        <article class="bcard gsap-blog-card">
+          <div class="bcard__number">03</div>
+          <div class="bcard__img">
+            <img class="gsap-parallax-img" src="./assets/images/64043549472efb7c68fbc489_ujtyhrgefdsa.jpg"
+              alt="Budget wedding">
+          </div>
+          <p class="bcard__meta">Planning</p>
+          <h3 class="bcard__title">How To Plan A Wedding On A Budget</h3>
+          <p class="bcard__excerpt">Get your dream wedding without breaking the bank.</p>
+          <a href="#" class="bcard__link">
+            Read Article
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot gsap-section">
+    <div class="wrap">
+      <div class="foot__grid gsap-reveal">
+        <div class="foot__brand">
+          <a href="#">
+            <img src="./assets/images/63dc0a237cfcf45bda8fe217_black with pmg trans2.png" alt="Plaza Le Rizz">
+          </a>
+          <p>Montreal's premier wedding and event venue since 1971.</p>
+          <div class="foot__socials">
+            <a href="https://www.instagram.com/plazalerizz/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24">
+                <path d="M17.6 7.6a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0Z" />
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0-1.6a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8Z" />
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M4 11.68c0-2.688 0-4.032.523-5.06a4.8 4.8 0 0 1 2.098-2.097C7.648 4 8.99 4 11.68 4h.64c2.688 0 4.032 0 5.06.523a4.8 4.8 0 0 1 2.097 2.098C20 7.648 20 8.99 20 11.68v.64c0 2.688 0 4.032-.523 5.06a4.8 4.8 0 0 1-2.098 2.097C16.352 20 15.01 20 12.32 20h-.64c-2.688 0-4.032 0-5.06-.523a4.8 4.8 0 0 1-2.097-2.098C4 16.352 4 15.01 4 12.32v-.64Zm7.68-6.08h.64c1.37 0 2.302.001 3.022.06.702.057 1.06.161 1.31.289a3.2 3.2 0 0 1 1.4 1.398c.127.25.23.61.288 1.31.059.72.06 1.652.06 3.023v.64c0 1.37-.001 2.302-.06 3.022-.057.702-.161 1.06-.289 1.31a3.2 3.2 0 0 1-1.398 1.4c-.25.127-.61.23-1.31.288-.72.059-1.652.06-3.023.06h-.64c-1.37 0-2.302-.001-3.022-.06-.702-.057-1.06-.161-1.31-.289a3.2 3.2 0 0 1-1.4-1.398c-.127-.25-.23-.61-.288-1.31-.059-.72-.06-1.652-.06-3.023v-.64c0-1.37.001-2.302.06-3.022.057-.702.161-1.06.289-1.31a3.2 3.2 0 0 1 1.398-1.4c.25-.127.61-.23 1.31-.288.72-.059 1.652-.06 3.023-.06Z" />
+              </svg>
+            </a>
+            <a href="https://www.facebook.com/lerizzreception" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.927.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0 0 14.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.36H7.332v3.21h2.753v8.196h3.312Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <p class="foot__col-title">Events</p>
+          <ul class="foot__links">
+            <li><a href="#">Weddings</a></li>
+            <li><a href="#">Social Events</a></li>
+            <li><a href="#">Corporate</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="foot__col-title">Explore</p>
+          <ul class="foot__links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our Food</a></li>
+            <li><a href="#">View Halls</a></li>
+            <li><a href="https://plazapmg.com/our-venues/" target="_blank">Our Group</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="foot__col-title">About</p>
+          <ul class="foot__links">
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Fran&ccedil;ais</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot__legal gsap-reveal">
+        <span>&copy; 2025 Plaza Le Rizz &bull; A <a href="https://plazapmg.com/" target="_blank"
+            style="text-decoration: underline;">Plaza Management Group</a> Venue</span>
+        <div class="foot__legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms &amp; Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GSAP ScrollTo Plugin (load before main script) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+  <!-- GSAP ANIMATIONS & JS -->
+  <script>
+    // Mark GSAP as loaded
+    document.documentElement.classList.add('gsap-loaded');
+
+    // Register GSAP plugins
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    // Safety fallback: ensure content is visible after 3 seconds
+    setTimeout(() => {
+      gsap.set('.gsap-hero-text, .gsap-hero-image, .gsap-hero-address, .gsap-reveal, .gsap-reveal-left, .gsap-reveal-right', {
+        opacity: 1, x: 0, y: 0, scale: 1, clearProps: 'all'
+      });
+    }, 3000);
+
+    // Hero text reveal - staggered fade in + slide up
+    const heroTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    heroTimeline
+      .from('.gsap-hero-text', {
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        delay: 0.3
+      })
+      .from('.gsap-hero-image', {
+        y: 40,
+        opacity: 0,
+        scale: 1.05,
+        duration: 1.4,
+      }, '-=0.8')
+      .from('.gsap-hero-address', {
+        y: 20,
+        opacity: 0,
+        duration: 0.8,
+      }, '-=0.6');
+
+    // Hero image parallax
+    gsap.to('.gsap-hero-image img', {
+      yPercent: 15,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    // Sections reveal on scroll - fade + slide up
+    gsap.utils.toArray('.gsap-section').forEach(section => {
+      gsap.from(section, {
+        opacity: 0.9,
+        y: 30,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // Reveal elements with fade + slide up
+    gsap.utils.toArray('.gsap-reveal').forEach(el => {
+      gsap.from(el, {
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // Reveal from left
+    gsap.utils.toArray('.gsap-reveal-left').forEach(el => {
+      gsap.from(el, {
+        x: -50,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // Reveal from right
+    gsap.utils.toArray('.gsap-reveal-right').forEach(el => {
+      gsap.from(el, {
+        x: 50,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // Service cards staggered entrance
+    gsap.from('.gsap-service-card', {
+      y: 60,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '#services',
+        start: 'top 75%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    // Gallery cells staggered entrance
+    gsap.from('.gsap-gallery-cell', {
+      y: 40,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.gallery',
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    // Testimonial cards staggered entrance
+    gsap.from('.gsap-testi-card', {
+      y: 50,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.12,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '#testimonials',
+        start: 'top 75%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    // Blog cards staggered entrance
+    gsap.from('.gsap-blog-card', {
+      y: 50,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.15,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '#blog',
+        start: 'top 75%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    // Lobby stats staggered entrance
+    gsap.from('.gsap-stat-item', {
+      y: 30,
+      opacity: 0,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.lobby__stats',
+        start: 'top 90%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    // Image parallax scroll effect
+    gsap.utils.toArray('.gsap-parallax-img').forEach(img => {
+      gsap.to(img, {
+        yPercent: -8,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: img,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.5
+        }
+      });
+    });
+
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('nav--scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // Mobile menu
+    const burger = document.getElementById('burger');
+    const overlay = document.getElementById('overlay');
+    // nav already declared above for scroll effect
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      overlay.classList.toggle('open');
+      nav.classList.toggle('nav--menu-open');
+    });
+    overlay.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        overlay.classList.remove('open');
+        nav.classList.remove('nav--menu-open');
+      });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href !== '#') {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            gsap.to(window, {
+              duration: 1.2,
+              scrollTo: { y: target, offsetY: 80 },
+              ease: 'power3.inOut'
+            });
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
