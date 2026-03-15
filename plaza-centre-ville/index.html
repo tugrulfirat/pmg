@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plaza Centre-Ville — Montréal</title>
+<style>@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inter:wght@300;400&display=swap");</style>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F4F2EE;
+  --black:#0C0C0C;
+  --mid:#767672;
+  --line:#E0DDD8;
+  --red:#C8382A;
+  --white:#FFFFFF;
+  --syne:'Syne',sans-serif;
+  --inter:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--inter);background:var(--bg);color:var(--black);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:999;
+  height:56px;padding:0 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(244,242,238,0.97);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--syne);font-size:13px;font-weight:600;
+  letter-spacing:0.04em;color:var(--black);
+}
+.nav-logo span{color:var(--red)}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-link{
+  font-family:var(--inter);font-size:12px;font-weight:300;
+  color:var(--mid);letter-spacing:0.02em;
+  transition:color 0.2s;cursor:pointer;
+}
+.nav-link:hover{color:var(--black)}
+.nav-inquire{
+  font-family:var(--syne);font-size:11px;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:10px 24px;background:var(--black);color:var(--white);
+  transition:background 0.2s;
+}
+.nav-inquire:hover{background:var(--red)}
+
+/* HERO */
+.hero{
+  margin-top:56px;
+  display:grid;grid-template-columns:1fr 1fr;
+  height:calc(100vh - 56px);min-height:600px;
+}
+.hero-img{
+  position:relative;overflow:hidden;
+}
+.hero-img img{transition:transform 8s ease}
+.hero-img:hover img{transform:scale(1.03)}
+.hero-text{
+  padding:64px 56px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  background:var(--bg);
+}
+.hero-top{}
+.hero-location{
+  font-family:var(--inter);font-size:11px;font-weight:300;
+  color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;
+  margin-bottom:32px;
+}
+.hero-h1{
+  font-family:var(--syne);font-weight:700;
+  font-size:clamp(48px,5.5vw,80px);
+  line-height:0.95;letter-spacing:-0.02em;
+  color:var(--black);
+}
+.hero-h1 em{
+  font-style:normal;color:var(--red);
+  display:block;font-size:0.5em;font-weight:400;
+  letter-spacing:0.04em;margin-top:12px;
+}
+.hero-bottom{}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:0;border-top:1px solid var(--line);
+}
+.hero-stat{
+  padding:24px 0;border-right:1px solid var(--line);
+}
+.hero-stat:nth-child(2n){border-right:none}
+.hero-stat:nth-child(n+3){border-top:1px solid var(--line)}
+.hero-stat-n{
+  font-family:var(--syne);font-size:28px;font-weight:600;
+  color:var(--black);line-height:1;
+}
+.hero-stat-l{
+  font-family:var(--inter);font-size:11px;font-weight:300;
+  color:var(--mid);margin-top:4px;letter-spacing:0.04em;
+}
+.hero-stat:nth-child(even){padding-left:24px}
+
+/* INTRO STATEMENT */
+.statement{
+  padding:80px 48px;
+  display:grid;grid-template-columns:1fr 2fr;gap:80px;
+  align-items:start;border-bottom:1px solid var(--line);
+  background:var(--white);
+}
+.statement-label{
+  font-family:var(--inter);font-size:11px;font-weight:300;
+  color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;
+  padding-top:8px;
+}
+.statement-text{
+  font-family:var(--syne);font-size:clamp(22px,2.5vw,32px);
+  font-weight:400;line-height:1.3;letter-spacing:-0.01em;
+  color:var(--black);
+}
+.statement-text strong{color:var(--red);font-weight:600}
+
+/* ADVANTAGES — the real selling points */
+.advantages{background:var(--black);padding:0}
+.adv-header{
+  padding:64px 48px 48px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:baseline;justify-content:space-between;
+}
+.adv-h2{
+  font-family:var(--syne);font-size:clamp(28px,3vw,40px);
+  font-weight:600;color:var(--white);letter-spacing:-0.01em;
+}
+.adv-sub{
+  font-family:var(--inter);font-size:12px;font-weight:300;
+  color:rgba(255,255,255,0.3);letter-spacing:0.04em;
+  max-width:280px;text-align:right;line-height:1.6;
+}
+.adv-list{}
+.adv-item{
+  display:grid;grid-template-columns:80px 1fr 1fr;
+  align-items:center;gap:40px;
+  padding:32px 48px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  transition:background 0.2s;
+}
+.adv-item:hover{background:rgba(255,255,255,0.02)}
+.adv-n{
+  font-family:var(--syne);font-size:13px;font-weight:400;
+  color:rgba(255,255,255,0.2);letter-spacing:0.1em;
+}
+.adv-title{
+  font-family:var(--syne);font-size:17px;font-weight:500;
+  color:var(--white);letter-spacing:-0.01em;
+}
+.adv-desc{
+  font-family:var(--inter);font-size:13px;font-weight:300;
+  line-height:1.7;color:rgba(255,255,255,0.45);
+}
+.adv-desc strong{color:rgba(255,255,255,0.8);font-weight:400}
+
+/* EVENT SWITCHER */
+.event-nav{
+  position:sticky;top:56px;z-index:90;
+  background:var(--bg);border-bottom:1px solid var(--line);
+  display:flex;
+}
+.event-tab{
+  flex:1;padding:20px 0;text-align:center;
+  font-family:var(--syne);font-size:11px;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--mid);cursor:pointer;
+  border:none;background:none;
+  border-bottom:2px solid transparent;
+  border-right:1px solid var(--line);
+  transition:all 0.2s;
+}
+.event-tab:last-child{border-right:none}
+.event-tab.active{color:var(--black);border-bottom:2px solid var(--black);background:var(--white)}
+.event-tab:hover:not(.active){color:var(--black)}
+
+/* EVENT SECTIONS */
+.event-section{display:none}
+.event-section.active{display:block}
+
+/* SPLIT LAYOUT */
+.split{display:grid;min-height:540px}
+.split.img-right{grid-template-columns:45% 55%}
+.split.img-left{grid-template-columns:55% 45%}
+.split-img{overflow:hidden;position:relative}
+.split-img img{transition:transform 1.6s ease}
+.split-img:hover img{transform:scale(1.04)}
+.split-content{
+  padding:64px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+  background:var(--white);
+}
+.split-content.dark{background:#161614;color:var(--white)}
+.split-content.tinted{background:var(--bg)}
+.sec-tag{
+  font-family:var(--inter);font-size:11px;font-weight:300;
+  color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.sec-tag::before{content:'';display:block;width:24px;height:1px;background:var(--red)}
+.sec-h2{
+  font-family:var(--syne);font-size:clamp(28px,3vw,40px);
+  font-weight:600;line-height:1.05;letter-spacing:-0.02em;
+  margin-bottom:20px;
+}
+.sec-body{
+  font-family:var(--inter);font-size:14px;font-weight:300;
+  line-height:1.85;color:var(--mid);margin-bottom:36px;
+}
+.dark .sec-body{color:rgba(255,255,255,0.45)}
+.dark .sec-h2{color:var(--white)}
+.dark .sec-tag{color:rgba(255,255,255,0.3)}
+
+/* SPEC TABLE */
+.spec{width:100%;border-collapse:collapse;margin-bottom:36px}
+.spec tr{border-bottom:1px solid var(--line)}
+.spec tr:first-child{border-top:1px solid var(--line)}
+.dark .spec tr{border-color:rgba(255,255,255,0.08)}
+.spec td{padding:13px 0;font-family:var(--inter);font-size:13px;vertical-align:middle}
+.spec-k{color:var(--mid);font-weight:300;width:60%}
+.spec-v{color:var(--black);font-weight:400;text-align:right}
+.dark .spec-k{color:rgba(255,255,255,0.3)}
+.dark .spec-v{color:rgba(255,255,255,0.8)}
+
+/* CAPACITY BAR */
+.cap-block{margin-bottom:36px}
+.cap-tag{
+  font-family:var(--inter);font-size:11px;font-weight:300;
+  color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.cap-row{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.cap-cfg{font-family:var(--inter);font-size:12px;font-weight:300;color:var(--mid);flex:1}
+.cap-bar-bg{flex:2;height:2px;background:var(--line)}
+.cap-bar-fill{height:2px;background:var(--black);transition:width 0.8s ease}
+.cap-num{font-family:var(--syne);font-size:15px;font-weight:600;color:var(--black);min-width:64px;text-align:right}
+
+/* ROOM CONFIGS */
+.configs{background:var(--bg);padding:64px 48px;border-top:1px solid var(--line)}
+.configs-h{
+  font-family:var(--syne);font-size:clamp(22px,2.5vw,32px);
+  font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;
+}
+.configs-sub{font-family:var(--inter);font-size:13px;font-weight:300;color:var(--mid);margin-bottom:48px}
+.configs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.config-card{background:var(--white);padding:36px 32px}
+.config-name{
+  font-family:var(--syne);font-size:18px;font-weight:600;
+  letter-spacing:-0.01em;margin-bottom:4px;
+}
+.config-type{
+  font-family:var(--inter);font-size:11px;font-weight:300;
+  color:var(--red);letter-spacing:0.08em;text-transform:uppercase;
+  margin-bottom:28px;
+}
+.config-rows{}
+.config-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--line);
+  font-family:var(--inter);font-size:12px;
+}
+.config-row:first-child{border-top:1px solid var(--line)}
+.config-k{color:var(--mid);font-weight:300}
+.config-v{color:var(--black);font-weight:400}
+
+/* GALLERY */
+.gallery{display:grid;height:400px;border-top:1px solid var(--line)}
+.gallery.g3{grid-template-columns:repeat(3,1fr)}
+.gallery.g2{grid-template-columns:60% 40%}
+.g-cell{overflow:hidden;border-right:1px solid var(--line)}
+.g-cell:last-child{border-right:none}
+.g-cell img{transition:transform 1.6s ease}
+.g-cell:hover img{transform:scale(1.05)}
+
+/* AMENITIES */
+.amenities{padding:64px 48px;background:var(--white);border-top:1px solid var(--line)}
+.amen-head{margin-bottom:48px}
+.amen-h{font-family:var(--syne);font-size:clamp(22px,2.5vw,32px);font-weight:600;letter-spacing:-0.01em;margin-bottom:6px}
+.amen-sub{font-family:var(--inter);font-size:13px;font-weight:300;color:var(--mid)}
+.amen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line)}
+.amen-cell{padding:28px 32px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.amen-cell:nth-child(3n){border-right:none}
+.amen-cell:nth-last-child(-n+3){border-bottom:none}
+.amen-name{font-family:var(--syne);font-size:14px;font-weight:500;color:var(--black);margin-bottom:4px}
+.amen-note{font-family:var(--inter);font-size:12px;font-weight:300;color:var(--mid);line-height:1.5}
+
+/* DINING */
+.dining{padding:64px 48px;background:var(--bg);border-top:1px solid var(--line)}
+.dining-head{margin-bottom:48px}
+.dining-h{font-family:var(--syne);font-size:clamp(22px,2.5vw,32px);font-weight:600;letter-spacing:-0.01em;margin-bottom:6px}
+.dining-sub{font-family:var(--inter);font-size:13px;font-weight:300;color:var(--mid)}
+.dining-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.d-card{background:var(--white);overflow:hidden}
+.d-img{height:200px;overflow:hidden}
+.d-img img{transition:transform 1.6s ease}
+.d-card:hover .d-img img{transform:scale(1.06)}
+.d-info{padding:24px 28px}
+.d-name{font-family:var(--syne);font-size:16px;font-weight:600;letter-spacing:-0.01em;margin-bottom:6px}
+.d-desc{font-family:var(--inter);font-size:13px;font-weight:300;color:var(--mid);line-height:1.65}
+
+/* LOCATION */
+.location{display:grid;grid-template-columns:1fr 1fr;background:var(--black)}
+.loc-img{overflow:hidden;position:relative;min-height:480px}
+.loc-img img{filter:grayscale(0.2)}
+.loc-text{
+  padding:64px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.loc-tag{
+  font-family:var(--inter);font-size:11px;font-weight:300;
+  color:rgba(255,255,255,0.25);letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.loc-tag::before{content:'';display:block;width:24px;height:1px;background:var(--red)}
+.loc-h{
+  font-family:var(--syne);font-size:clamp(26px,3vw,40px);
+  font-weight:600;color:var(--white);letter-spacing:-0.02em;
+  line-height:1.05;margin-bottom:20px;
+}
+.loc-body{
+  font-family:var(--inter);font-size:14px;font-weight:300;
+  line-height:1.85;color:rgba(255,255,255,0.4);margin-bottom:36px;
+}
+.loc-rows{}
+.loc-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.loc-row:first-child{border-top:1px solid rgba(255,255,255,0.07)}
+.loc-k{font-family:var(--inter);font-size:11px;font-weight:300;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.25)}
+.loc-v{font-family:var(--inter);font-size:13px;font-weight:300;color:rgba(255,255,255,0.75)}
+.loc-v strong{color:var(--white);font-weight:400}
+
+/* CTA */
+.cta{
+  padding:80px 48px;background:var(--bg);
+  border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:40px;
+}
+.cta-left{}
+.cta-h{
+  font-family:var(--syne);font-size:clamp(28px,3.5vw,48px);
+  font-weight:600;letter-spacing:-0.02em;line-height:1.05;
+  margin-bottom:8px;
+}
+.cta-sub{font-family:var(--inter);font-size:13px;font-weight:300;color:var(--mid)}
+.btn{
+  display:inline-block;
+  font-family:var(--syne);font-size:11px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:16px 40px;cursor:pointer;border:none;
+  transition:all 0.2s;white-space:nowrap;
+}
+.btn-black{background:var(--black);color:var(--white)}
+.btn-black:hover{background:var(--red)}
+.btn-red{background:var(--red);color:var(--white)}
+.btn-red:hover{background:var(--black)}
+.btn-outline{background:transparent;color:var(--black);border:1px solid var(--black)}
+.btn-outline:hover{background:var(--black);color:var(--white)}
+
+/* FOOTER */
+footer{background:var(--black);padding:64px 48px 40px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.f-brand{font-family:var(--syne);font-size:14px;font-weight:600;color:var(--white);margin-bottom:16px;letter-spacing:0.02em}
+.f-brand span{color:var(--red)}
+.f-tagline{font-family:var(--inter);font-size:13px;font-weight:300;color:rgba(255,255,255,0.3);line-height:1.75;max-width:200px}
+.f-col-t{font-family:var(--inter);font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:20px}
+.f-col a,.f-col p{font-family:var(--inter);font-size:13px;font-weight:300;color:rgba(255,255,255,0.45);line-height:2.2;display:block;transition:color 0.2s}
+.f-col a:hover{color:rgba(255,255,255,0.9)}
+.footer-btm{padding-top:28px;border-top:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between}
+.footer-btm p{font-family:var(--inter);font-size:11px;font-weight:300;color:rgba(255,255,255,0.18)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Plaza Centre<span>·</span>Ville</div>
+  <div class="nav-links">
+    <span class="nav-link" onclick="switchTab('corporate')">Corporate</span>
+    <span class="nav-link" onclick="switchTab('social')">Social</span>
+    <span class="nav-link" onclick="switchTab('weddings')">Weddings</span>
+    <span class="nav-link" onclick="document.getElementById('dining').scrollIntoView({behavior:'smooth'})">Dining</span>
+    <span class="nav-link" onclick="document.getElementById('location').scrollIntoView({behavior:'smooth'})">Location</span>
+    <a href="#contact" class="nav-inquire">Inquire</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-img">
+    <img src="images/hero-ballroom.jpg" alt="Plaza Centre-Ville grande salle">
+  </div>
+  <div class="hero-text">
+    <div class="hero-top">
+      <p class="hero-location">Downtown Montréal · Place Bonaventure</p>
+      <h1 class="hero-h1">
+        Plaza<br>Centre-Ville
+        <em>Event Venue Since 2018</em>
+      </h1>
+    </div>
+    <div class="hero-bottom">
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-n">10,000</div>
+          <div class="hero-stat-l">Square feet</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-n">18 ft</div>
+          <div class="hero-stat-l">Ceiling height</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-n">750</div>
+          <div class="hero-stat-l">Max capacity</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-n">$10</div>
+          <div class="hero-stat-l">Indoor parking</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATEMENT -->
+<div class="statement">
+  <div class="statement-label">The Venue</div>
+  <div class="statement-text">
+    Downtown Montréal's largest non-hotel event space. <strong>10,000 square feet. No union charges. No surprises.</strong> We are there on the day of your event — not just management. That is why clients who came 10 years ago are still family.
+  </div>
+</div>
+
+<!-- ADVANTAGES -->
+<div class="advantages">
+  <div class="adv-header">
+    <h2 class="adv-h2">What you won't find<br>anywhere else downtown</h2>
+    <p class="adv-sub">Six reasons clients leave Intercontinental and Plaza Bonaventure and stay with us.</p>
+  </div>
+  <div class="adv-list">
+    <div class="adv-item">
+      <span class="adv-n">01</span>
+      <span class="adv-title">$10 Indoor Parking</span>
+      <p class="adv-desc">We signed our lease deal. <strong>$10 flat, indoor, downtown Montréal.</strong> You are not getting that anywhere else in the city.</p>
+    </div>
+    <div class="adv-item">
+      <span class="adv-n">02</span>
+      <span class="adv-title">100 Gbps Fiber Internet</span>
+      <p class="adv-desc"><strong>100 gigabytes upload and download, certified.</strong> Anywhere else, this is a line item on your invoice. Here it is included.</p>
+    </div>
+    <div class="adv-item">
+      <span class="adv-n">03</span>
+      <span class="adv-title">7 Integrated Screens</span>
+      <p class="adv-desc">Wherever your guest sits, they see a screen. <strong>Projectors, mics, speakers — plug and play. Included.</strong></p>
+    </div>
+    <div class="adv-item">
+      <span class="adv-n">04</span>
+      <span class="adv-title">Metro Bonaventure — Direct</span>
+      <p class="adv-desc">Indoor corridor through the RESO underground city. <strong>No coat required — even in January.</strong></p>
+    </div>
+    <div class="adv-item">
+      <span class="adv-n">05</span>
+      <span class="adv-title">No Union. No Extra Charges.</span>
+      <p class="adv-desc">We are not a hotel. Move a table, change a chair, plug something in — <strong>no charge. We are flexible with everything.</strong></p>
+    </div>
+    <div class="adv-item">
+      <span class="adv-n">06</span>
+      <span class="adv-title">Keep Your Hotel Points</span>
+      <p class="adv-desc">No affiliation. <strong>Stay at IHG, Marriott, Intercontinental</strong> — keep your points. Hold your event here. Nobody obliges you.</p>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT NAV -->
+<div class="event-nav" id="event-nav">
+  <button class="event-tab active" onclick="switchTab('corporate')">Corporate</button>
+  <button class="event-tab" onclick="switchTab('social')">Social</button>
+  <button class="event-tab" onclick="switchTab('weddings')">Weddings</button>
+</div>
+
+<!-- CORPORATE -->
+<div class="event-section active" id="corporate">
+  <div class="split img-left">
+    <div class="split-img">
+      <img src="images/mont-royal.jpg" alt="Corporate setup">
+    </div>
+    <div class="split-content">
+      <p class="sec-tag">Corporate Events</p>
+      <h2 class="sec-h2">The space serious companies need downtown.</h2>
+      <p class="sec-body">10,000 sq ft. 18-foot ceilings. 92 points of programmable lighting. One hall that divides into two or three independent rooms — each with its own AV. CPA Nacional signs contracts here because it costs a fraction of what the hotels charge.</p>
+      <div class="cap-block">
+        <p class="cap-tag">Capacity by configuration</p>
+        <div class="cap-row"><span class="cap-cfg">Round tables of 10</span><div class="cap-bar-bg"><div class="cap-bar-fill" style="width:100%"></div></div><span class="cap-num">750</span></div>
+        <div class="cap-row"><span class="cap-cfg">Theater style</span><div class="cap-bar-bg"><div class="cap-bar-fill" style="width:100%"></div></div><span class="cap-num">1,000+</span></div>
+        <div class="cap-row"><span class="cap-cfg">Cocktail standing</span><div class="cap-bar-bg"><div class="cap-bar-fill" style="width:90%"></div></div><span class="cap-num">900</span></div>
+        <div class="cap-row"><span class="cap-cfg">2 rooms — each</span><div class="cap-bar-bg"><div class="cap-bar-fill" style="width:53%"></div></div><span class="cap-num">~400</span></div>
+        <div class="cap-row"><span class="cap-cfg">3 rooms — each</span><div class="cap-bar-bg"><div class="cap-bar-fill" style="width:33%"></div></div><span class="cap-num">~250</span></div>
+      </div>
+      <button class="btn btn-black">Request Availability</button>
+    </div>
+  </div>
+
+  <div class="gallery g3">
+    <div class="g-cell"><img src="images/239982949_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Corporate hall"></div>
+    <div class="g-cell"><img src="images/293627666_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Event setup"></div>
+    <div class="g-cell"><img src="images/2_1_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Venue space"></div>
+  </div>
+
+  <div class="configs">
+    <h2 class="configs-h">One hall. Three configurations.</h2>
+    <p class="configs-sub">Every company has a different setup. We give you the capacity chart for each.</p>
+    <div class="configs-grid">
+      <div class="config-card">
+        <h3 class="config-name">Full Hall</h3>
+        <p class="config-type">All Corporate Events</p>
+        <div class="config-rows">
+          <div class="config-row"><span class="config-k">Round tables</span><span class="config-v">750</span></div>
+          <div class="config-row"><span class="config-k">Theater style</span><span class="config-v">1,000+</span></div>
+          <div class="config-row"><span class="config-k">Cocktail standing</span><span class="config-v">900</span></div>
+          <div class="config-row"><span class="config-k">Screens</span><span class="config-v">7 integrated</span></div>
+          <div class="config-row"><span class="config-k">AV included</span><span class="config-v">Yes</span></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <h3 class="config-name">Split — 2 Rooms</h3>
+        <p class="config-type">Mid-size Corporate</p>
+        <div class="config-rows">
+          <div class="config-row"><span class="config-k">Each room seated</span><span class="config-v">~400</span></div>
+          <div class="config-row"><span class="config-k">Each room theater</span><span class="config-v">~500</span></div>
+          <div class="config-row"><span class="config-k">Full partition</span><span class="config-v">Yes</span></div>
+          <div class="config-row"><span class="config-k">AV per room</span><span class="config-v">Independent</span></div>
+          <div class="config-row"><span class="config-k">Simultaneous events</span><span class="config-v">Yes</span></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <h3 class="config-name">Split — 3 Rooms</h3>
+        <p class="config-type">Breakout &amp; Conference</p>
+        <div class="config-rows">
+          <div class="config-row"><span class="config-k">Each room seated</span><span class="config-v">~250</span></div>
+          <div class="config-row"><span class="config-k">Breakout format</span><span class="config-v">Yes</span></div>
+          <div class="config-row"><span class="config-k">AV per room</span><span class="config-v">Independent</span></div>
+          <div class="config-row"><span class="config-k">Meeting rooms</span><span class="config-v">Additional</span></div>
+          <div class="config-row"><span class="config-k">Executive lounge</span><span class="config-v">Available</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL -->
+<div class="event-section" id="social">
+  <div class="split img-right">
+    <div class="split-content tinted">
+      <p class="sec-tag">Social Events</p>
+      <h2 class="sec-h2">Your gathering. Exactly as you imagined it.</h2>
+      <p class="sec-body">Chiavari chairs in white or black. Uplighting from the ground up in any colour. A stage in the corner for a live band. A cocktail area. Everything bends to your vision — nothing is an extra charge because we moved a table.</p>
+      <table class="spec">
+        <tr><td class="spec-k">Cocktail standing</td><td class="spec-v">900 guests</td></tr>
+        <tr><td class="spec-k">Seated — with dance floor</td><td class="spec-v">600 guests</td></tr>
+        <tr><td class="spec-k">Seated — no dance floor</td><td class="spec-v">750 guests</td></tr>
+        <tr><td class="spec-k">Chiavari chairs</td><td class="spec-v">White or black</td></tr>
+        <tr><td class="spec-k">Uplighting</td><td class="spec-v">Full colour, programmable</td></tr>
+        <tr><td class="spec-k">Live band stage</td><td class="spec-v">Corner stage, included</td></tr>
+        <tr><td class="spec-k">Event coordinator</td><td class="spec-v">Dedicated</td></tr>
+      </table>
+      <button class="btn btn-black">Plan Your Event</button>
+    </div>
+    <div class="split-img">
+      <img src="images/regence.jpg" alt="Social event">
+    </div>
+  </div>
+  <div class="gallery g3">
+    <div class="g-cell"><img src="images/304552385_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Social setup"></div>
+    <div class="g-cell"><img src="images/306109327_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Social event"></div>
+    <div class="g-cell"><img src="images/792756790_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Event hall"></div>
+  </div>
+</div>
+
+<!-- WEDDINGS -->
+<div class="event-section" id="weddings">
+  <div class="split img-left">
+    <div class="split-img">
+      <img src="images/plaza.jpg" alt="Wedding">
+    </div>
+    <div class="split-content">
+      <p class="sec-tag">Weddings</p>
+      <h2 class="sec-h2">The day of, we are there. Not just management.</h2>
+      <p class="sec-body">We roll up our sleeves. We do the plates. We make sure it comes out well. Every other venue — the owner is never there on event day. We are. That is why clients who came for a wedding 10 years ago are still family.</p>
+      <table class="spec">
+        <tr><td class="spec-k">Ceremony seated</td><td class="spec-v">Up to 700</td></tr>
+        <tr><td class="spec-k">Reception — with dance floor</td><td class="spec-v">600 guests</td></tr>
+        <tr><td class="spec-k">Reception — no dance floor</td><td class="spec-v">750 guests</td></tr>
+        <tr><td class="spec-k">Bridal suite</td><td class="spec-v">Private, full floor</td></tr>
+        <tr><td class="spec-k">Ceremony space</td><td class="spec-v">On-site</td></tr>
+        <tr><td class="spec-k">Wedding coordinator</td><td class="spec-v">Dedicated — day of</td></tr>
+        <tr><td class="spec-k">Photoshoot locations</td><td class="spec-v">Nearby — multiple</td></tr>
+      </table>
+      <button class="btn btn-black">Book a Visit</button>
+    </div>
+  </div>
+  <div class="gallery g3">
+    <div class="g-cell"><img src="images/849242581_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Wedding"></div>
+    <div class="g-cell"><img src="images/B_S-2193_resize_42bf47b0f9fbd735616adfa1279cce1a.JPG" alt="Wedding reception"></div>
+    <div class="g-cell"><img src="images/DSC02806_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Wedding detail"></div>
+  </div>
+</div>
+
+<!-- AMENITIES -->
+<div class="amenities">
+  <div class="amen-head">
+    <h2 class="amen-h">No surprises on the invoice.</h2>
+    <p class="amen-sub">Every item below is included. No asterisks.</p>
+  </div>
+  <div class="amen-grid">
+    <div class="amen-cell">
+      <p class="amen-name">AV — Screens, Mics, Speakers</p>
+      <p class="amen-note">7 screens. Plug and play. Included.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">100 Gbps Fiber Internet</p>
+      <p class="amen-note">Certified. Not an extra charge.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">$10 Indoor Parking</p>
+      <p class="amen-note">Downtown Montréal. Signed deal.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">Uplighting — Full Colour</p>
+      <p class="amen-note">Ground up, any colour, DMX.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">Bar &amp; Beverage Services</p>
+      <p class="amen-note">Full service bar staffing.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">Coat Check</p>
+      <p class="amen-note">Staffed. On-site.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">Dedicated Staff — Day Of</p>
+      <p class="amen-note">We are there. Not just management.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">Free WiFi</p>
+      <p class="amen-note">High speed throughout.</p>
+    </div>
+    <div class="amen-cell">
+      <p class="amen-name">Full Accessibility</p>
+      <p class="amen-note">Wheelchair and stroller access.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DINING -->
+<div class="dining" id="dining">
+  <div class="dining-head">
+    <h2 class="dining-h">Six ways to dine.</h2>
+    <p class="dining-sub">From plated service to family-style — every configuration handled in-house.</p>
+  </div>
+  <div class="dining-grid">
+    <div class="d-card"><div class="d-img"><img src="images/DSC05356_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Plated"></div><div class="d-info"><h3 class="d-name">Plated Service</h3><p class="d-desc">Crafted meals, artfully presented.</p></div></div>
+    <div class="d-card"><div class="d-img"><img src="images/DSC05366_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Stations"></div><div class="d-info"><h3 class="d-name">Interactive Food Stations</h3><p class="d-desc">Personalized dining with curated small bites.</p></div></div>
+    <div class="d-card"><div class="d-img"><img src="images/DSC05368_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Buffet"></div><div class="d-info"><h3 class="d-name">Buffet-style Dining</h3><p class="d-desc">A spread — guests indulge in their favourites.</p></div></div>
+    <div class="d-card"><div class="d-img"><img src="images/DSC05374_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Cocktail"></div><div class="d-info"><h3 class="d-name">Cocktail Reception</h3><p class="d-desc">Flowing atmosphere, cocktails, small bites.</p></div></div>
+    <div class="d-card"><div class="d-img"><img src="images/DSC05378_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Canapés"></div><div class="d-info"><h3 class="d-name">Canapés</h3><p class="d-desc">The perfect prelude to any celebration.</p></div></div>
+    <div class="d-card"><div class="d-img"><img src="images/IMG_0006_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Family style"></div><div class="d-info"><h3 class="d-name">Family-style Service</h3><p class="d-desc">Shared dishes. Communal joy.</p></div></div>
+  </div>
+</div>
+
+<!-- LOCATION -->
+<div class="location" id="location">
+  <div class="loc-img">
+    <img src="images/Plaza_Centre-Ville20_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Plaza Centre-Ville">
+  </div>
+  <div class="loc-text">
+    <p class="loc-tag">Getting Here</p>
+    <h2 class="loc-h">Downtown Montréal.<br>No coat required.</h2>
+    <p class="loc-body">Direct underground corridor from Metro Bonaventure through the RESO. Your guests arrive indoors — no matter the weather. And when they drive, $10 indoor parking is waiting.</p>
+    <div class="loc-rows">
+      <div class="loc-row"><span class="loc-k">Address</span><span class="loc-v">777 boul. Robert-Bourassa, H3A 0B1</span></div>
+      <div class="loc-row"><span class="loc-k">Metro</span><span class="loc-v"><strong>Bonaventure — direct RESO access</strong></span></div>
+      <div class="loc-row"><span class="loc-k">Parking</span><span class="loc-v"><strong>$10 indoor — signed deal</strong></span></div>
+      <div class="loc-row"><span class="loc-k">Hotel affiliation</span><span class="loc-v">None — keep your points</span></div>
+      <div class="loc-row"><span class="loc-k">Phone</span><span class="loc-v">514-879-0718</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta" id="contact">
+  <div class="cta-left">
+    <h2 class="cta-h">Ready to plan your event?</h2>
+    <p class="cta-sub">Our team responds within 24 hours.</p>
+  </div>
+  <button class="btn btn-black">Contact Us</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="f-brand">Plaza Centre<span>·</span>Ville</div>
+      <p class="f-tagline">Downtown Montréal's premier event venue. 10,000 sq ft. No surprises.</p>
+    </div>
+    <div class="f-col">
+      <p class="f-col-t">Events</p>
+      <a href="#">Corporate</a>
+      <a href="#">Social</a>
+      <a href="#">Weddings</a>
+      <a href="#">Dining</a>
+    </div>
+    <div class="f-col">
+      <p class="f-col-t">PMG Group</p>
+      <a href="https://plazapmg.com">plazapmg.com</a>
+      <a href="#">Our Venues</a>
+      <a href="#">Partners</a>
+    </div>
+    <div class="f-col">
+      <p class="f-col-t">Contact</p>
+      <p>777 boul. Robert-Bourassa<br>Montréal, QC H3A 0B1</p>
+      <a href="tel:5148790718">514-879-0718</a>
+    </div>
+  </div>
+  <div class="footer-btm">
+    <p>© 2026 Plaza Centre-Ville · A PMG Group Property · Montréal, Québec</p>
+    <p>Legal Notice · Privacy Policy</p>
+  </div>
+</footer>
+
+<script>
+function switchTab(type){
+  document.querySelectorAll('.event-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.event-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(type).classList.add('active');
+  const map={corporate:0,social:1,weddings:2};
+  document.querySelectorAll('.event-tab')[map[type]].classList.add('active');
+  document.getElementById('event-nav').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
