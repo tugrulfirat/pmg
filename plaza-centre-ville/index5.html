@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plaza Centre-Ville | Downtown Montreal's Premier Event Venue</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Public+Sans:ital,wght@0,200;0,300;0,400;1,300&display=swap" rel="stylesheet">
+    
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        :root {
+            --gold: #8b7355;
+            --cream: #fcfbf9;
+            --ink: #1a1a1a;
+        }
+
+        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .font-public    { font-family: 'Public Sans', sans-serif; }
+
+        body {
+            background-color: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        /* Grain overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* 0px border-radius system-wide */
+        * { border-radius: 0 !important; }
+
+        /* 12-col grid */
+        .grid-12 {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Sidebar Nav */
+        .sidebar-nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 60px; height: 100vh;
+            border-right: 0.5px solid rgba(0,0,0,0.08);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100;
+            background-color: var(--cream);
+        }
+        .brand-vertical {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        /* Image reveal mask */
+        .mask-reveal {
+            clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+        }
+
+        /* Hero image */
+        .hero-img { transform: scale(1.1); }
+
+        /* Hall list hover */
+        .hall-preview-img {
+            transition: filter 0.4s ease, opacity 0.4s ease;
+            filter: blur(15px);
+            opacity: 0;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .hall-preview-img.active { filter: blur(0); opacity: 1; }
+
+        .hall-item {
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 1.5rem 0;
+            border-bottom: 0.5px solid rgba(0,0,0,0.1);
+        }
+        .hall-item:hover { color: var(--gold); }
+
+        /* Text slide-up */
+        .overflow-clip { overflow: hidden; display: inline-block; vertical-align: top; }
+        .slide-up { display: inline-block; transform: translateY(110%); }
+
+        /* Fade-up placeholders */
+        .fade-up-init { opacity: 0; transform: translateY(20px); }
+
+        /* SVG map line */
+        .map-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+
+        /* Divider */
+        .thin-rule { border: none; border-top: 0.5px solid rgba(0,0,0,0.12); }
+
+        /* Event-type toggle tabs */
+        .mode-btn {
+            font-family: 'Public Sans', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 0.6rem 1.6rem;
+            border: 0.5px solid rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        .mode-btn.active {
+            background: var(--ink);
+            color: #fff;
+            border-color: var(--ink);
+        }
+
+        /* Mode panels */
+        .mode-panel { display: none; }
+        .mode-panel.active { display: block; }
+
+        /* Feature chip */
+        .feature-chip {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 1.5rem 0;
+            border-bottom: 0.5px solid rgba(0,0,0,0.08);
+        }
+        .chip-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+            min-width: 2rem;
+            padding-top: 2px;
+        }
+
+        /* Stat block */
+        .stat-item {
+            padding: 2.5rem 0;
+            border-top: 0.5px solid rgba(255,255,255,0.12);
+        }
+
+        /* CTA section */
+        .cta-link {
+            display: inline-block;
+            border-bottom: 0.5px solid var(--ink);
+            padding-bottom: 2px;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .cta-link:hover { color: var(--gold); border-color: var(--gold); }
+
+        /* Testimonial */
+        .testimonial-mark {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 6rem;
+            line-height: 0.5;
+            color: var(--gold);
+            opacity: 0.4;
+        }
+
+        /* Contact form inputs */
+        .form-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 0.5px solid rgba(0,0,0,0.2);
+            padding: 0.75rem 0;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-input:focus { border-color: var(--gold); }
+        .form-input::placeholder { color: rgba(0,0,0,0.35); }
+
+        /* Footer */
+        footer a { transition: color 0.3s; }
+        footer a:hover { color: var(--gold); }
+    </style>
+</head>
+<body class="font-public antialiased selection:bg-[#8b7355] selection:text-white">
+
+    <!-- Grain overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar-nav">
+        <div class="brand-vertical font-public tracking-widest text-gray-800">
+            Plaza Centre-Ville
+        </div>
+    </aside>
+
+    <main class="ml-[60px]">
+
+        <!-- ═══════════════════════════════════════════
+             01  HERO
+        ════════════════════════════════════════════ -->
+        <section class="min-h-screen pt-32 pb-16 px-8 lg:px-12 relative overflow-hidden flex items-center">
+            <div class="grid-12 w-full">
+
+                <!-- Text: cols 2–5 -->
+                <div class="col-start-2 col-span-4 z-10 flex flex-col justify-center">
+                    <p class="text-xs tracking-widest uppercase mb-6 fade-up-init text-gray-400">Downtown Montréal &mdash; Est. 2015</p>
+
+                    <h1 class="font-cormorant text-7xl lg:text-[7.5rem] font-light mb-8" style="line-height:0.85">
+                        <span class="overflow-clip"><span class="slide-up">Where Every</span></span><br>
+                        <span class="overflow-clip"><span class="slide-up">Event Becomes</span></span><br>
+                        <span class="overflow-clip"><span class="slide-up text-[#8b7355]"><em>Unforgettable</em></span></span>
+                    </h1>
+
+                    <div class="overflow-clip mb-12 max-w-sm">
+                        <p class="text-base text-gray-500 font-light leading-relaxed slide-up">
+                            10,000 sq&nbsp;ft of blank canvas. 18&nbsp;ft ceilings. 17 spaces. Up to 900 guests. In the heart of downtown Montréal, connected to the underground city.
+                        </p>
+                    </div>
+
+                    <div class="flex gap-8 fade-up-init">
+                        <a href="#experience" class="cta-link">Explore the Venue</a>
+                        <a href="#contact"    class="cta-link">Request a Quote</a>
+                    </div>
+                </div>
+
+                <!-- Image: cols 6–12 -->
+                <div class="col-start-6 col-span-7 relative h-[88vh] overflow-hidden mask-reveal" id="hero-img-wrap">
+                    <img src="./images/DSC05374_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                         alt="Plaza Centre-Ville Grand Ballroom"
+                         class="w-full h-full object-cover hero-img" id="hero-img">
+                    <!-- Floating caption pill -->
+                    <div class="absolute bottom-8 left-8 fade-up-init">
+                        <span class="bg-white/90 px-4 py-2 text-xs tracking-widest uppercase text-gray-700">Grand Ballroom — up to 900 guests</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+             02  YOUR EXPERIENCE — SOCIAL vs CORPORATE
+        ════════════════════════════════════════════ -->
+        <section id="experience" class="py-40 px-8 lg:px-12 border-t border-gray-100">
+            <div class="grid-12 w-full items-start">
+
+                <!-- Section label -->
+                <div class="col-start-2 col-span-10 mb-16">
+                    <div class="flex items-center gap-6 mb-4 fade-up-init" id="exp-label">
+                        <span class="text-xs tracking-widest uppercase text-gray-400">02</span>
+                        <span class="flex-1 thin-rule"></span>
+                        <span class="text-xs tracking-widest uppercase text-gray-400">Choose Your Experience</span>
+                    </div>
+                    <h2 class="font-cormorant text-5xl lg:text-6xl font-light" style="line-height:0.9">
+                        <span class="overflow-clip"><span class="slide-up exp-title">The same space,</span></span><br>
+                        <span class="overflow-clip"><span class="slide-up exp-title text-[#8b7355]"><em>entirely different worlds.</em></span></span>
+                    </h2>
+                </div>
+
+                <!-- Toggle buttons -->
+                <div class="col-start-2 col-span-10 mb-12 fade-up-init" id="mode-tabs">
+                    <button class="mode-btn active" data-mode="social">Social & Weddings</button>
+                    <button class="mode-btn" data-mode="corporate" style="margin-left:-0.5px">Corporate</button>
+                </div>
+
+                <!-- SOCIAL PANEL -->
+                <div class="col-start-2 col-span-10 mode-panel active" id="panel-social">
+                    <div class="grid-12 w-full items-stretch" style="gap:1.5rem">
+
+                        <!-- Images: two stacked photos filling full column height -->
+                        <div class="col-span-5 grid grid-rows-2 gap-1" style="min-height:700px">
+                            <img src="./images/DSC05366_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                                 alt="Social setup with Chiavari chairs"
+                                 class="w-full h-full object-cover object-center">
+                            <img src="./images/849242581_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                                 alt="Wedding banquet"
+                                 class="w-full h-full object-cover object-center">
+                        </div>
+
+                        <!-- Content -->
+                        <div class="col-start-7 col-span-5 pt-4">
+                            <p class="text-xs tracking-widest uppercase text-[#8b7355] mb-4">Social / Weddings / Galas</p>
+                            <h3 class="font-cormorant text-4xl font-light mb-6" style="line-height:1">
+                                Your gathering.<br>Exactly as imagined.
+                            </h3>
+                            <p class="text-gray-500 font-light leading-relaxed mb-10 text-sm">
+                                When it's social, you're not walking into a boardroom. Chiavari chairs in white or black, curated uplighting that rises from the floor in any colour, a cocktail terrace, and a corner stage for your live band. Nothing is forced. Everything bends to your vision.
+                            </p>
+
+                            <div class="mb-10">
+                                <div class="feature-chip">
+                                    <span class="chip-num">01</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Chiavari Chairs — white or black</div>
+                                        <div class="text-xs text-gray-400 font-light">Included. Not the corporate stack chairs.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">02</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Ground-Up Uplighting in Any Colour</div>
+                                        <div class="text-xs text-gray-400 font-light">Transform the mood entirely with your palette.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">03</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Cocktail Reception Area</div>
+                                        <div class="text-xs text-gray-400 font-light">Separate arrival space with bar service.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">04</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Corner Stage for Live Band</div>
+                                        <div class="text-xs text-gray-400 font-light">Full audio integration. No venue charge for the stage.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">05</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Dining: Plated, Stations, or Family-Style</div>
+                                        <div class="text-xs text-gray-400 font-light">Owners on-site the day of your event.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip" style="border-bottom:none">
+                                    <span class="chip-num">06</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Nearby Photoshoot Locations</div>
+                                        <div class="text-xs text-gray-400 font-light">Downtown Montréal as your backdrop.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ul class="text-sm border-t border-gray-200 pt-6 space-y-3 font-light mb-10">
+                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Seated Capacity</span><span>up to 700 guests</span></li>
+                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Cocktail Capacity</span><span>up to 900 guests</span></li>
+                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Dance Floor</span><span>Yes — full floor integration</span></li>
+                            </ul>
+
+                            <a href="#contact" class="cta-link">Discuss Your Event</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- CORPORATE PANEL -->
+                <div class="col-start-2 col-span-10 mode-panel" id="panel-corporate">
+                    <div class="grid-12 w-full items-stretch" style="gap:1.5rem">
+
+                        <!-- Images -->
+                        <div class="col-span-5 grid grid-rows-2 gap-1" style="min-height:700px">
+                            <img src="./images/IMG_0006_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                                 alt="Corporate conference setup"
+                                 class="w-full h-full object-cover object-center">
+                            <img src="./images/DSC05356_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                                 alt="Corporate banquet"
+                                 class="w-full h-full object-cover object-center">
+                        </div>
+
+                        <!-- Content -->
+                        <div class="col-start-7 col-span-5 pt-4">
+                            <p class="text-xs tracking-widest uppercase text-[#8b7355] mb-4">Conferences / Galas / Trade Shows / Exams</p>
+                            <h3 class="font-cormorant text-4xl font-light mb-6" style="line-height:1">
+                                The space serious<br>companies need.
+                            </h3>
+                            <p class="text-gray-500 font-light leading-relaxed mb-10 text-sm">
+                                One hall that divides into three fully independent rooms, each with its own AV system. Certified 100&nbsp;Gbps fiber internet. Seven screens — wherever a guest sits, they have a screen. Dedicated day-of management. Plug and play, without the hotel price tag or the union surcharge.
+                            </p>
+
+                            <div class="mb-10">
+                                <div class="feature-chip">
+                                    <span class="chip-num">01</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Certified 100 Gbps Fiber Internet</div>
+                                        <div class="text-xs text-gray-400 font-light">Full upload & download. Included in corporate packages.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">02</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">7 Screens — All 4K</div>
+                                        <div class="text-xs text-gray-400 font-light">Every seat has a sightline. Integrated AV system.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">03</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Divides into 3 Independent Rooms</div>
+                                        <div class="text-xs text-gray-400 font-light">Separate entrances possible. Run two events simultaneously.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">04</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Breakout & Meeting Rooms</div>
+                                        <div class="text-xs text-gray-400 font-light">Dedicated prep rooms. Committee offices available from morning.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip">
+                                    <span class="chip-num">05</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Not Unionized — Total Flexibility</div>
+                                        <div class="text-xs text-gray-400 font-light">No charge for moving a table. No surprise line items.</div>
+                                    </div>
+                                </div>
+                                <div class="feature-chip" style="border-bottom:none">
+                                    <span class="chip-num">06</span>
+                                    <div>
+                                        <div class="text-sm font-normal mb-1">Mics, Speakers, Projectors — Included</div>
+                                        <div class="text-xs text-gray-400 font-light">Basic AV is package-inclusive. Plug & play from day one.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ul class="text-sm border-t border-gray-200 pt-6 space-y-3 font-light mb-10">
+                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Theatre Style</span><span>Up to 900 guests</span></li>
+                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Classroom / Rounds</span><span>Up to 750 guests</span></li>
+                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Internet</span><span>100 Gbps certified fiber</span></li>
+                            </ul>
+
+                            <a href="#contact" class="cta-link">Plan Your Conference</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+             03  4 CONFIGURABLE HALLS (interactive list)
+        ════════════════════════════════════════════ -->
+        <section id="halls" class="py-40 px-8 lg:px-12 bg-[#f9f8f6] border-t border-gray-100">
+            <div class="grid-12 w-full">
+
+                <!-- Image Preview: cols 2–6 -->
+                <div class="col-start-2 col-span-5 relative h-[700px] overflow-hidden mask-reveal" id="halls-img-wrap">
+                    <div class="absolute inset-0 bg-gray-100"></div>
+                    <img src="./assets/regence.jpg"
+                         alt="Régence" class="hall-preview-img active" data-hall="regence">
+                    <img src="./assets/cartier.jpg"
+                         alt="Cartier" class="hall-preview-img" data-hall="cartier">
+                    <img src="./assets/mont-royal.jpg"
+                         alt="Mont-Royal" class="hall-preview-img" data-hall="mont-royal">
+                    <img src="./assets/plaza.jpg"
+                         alt="Grand Ballroom" class="hall-preview-img" data-hall="plaza">
+                </div>
+
+                <!-- Floating content box: cols 7–11 -->
+                <div class="col-start-7 col-span-5 z-20 flex flex-col justify-center">
+                    <div class="bg-[#fcfbf9] p-12 lg:p-16 border border-gray-100 shadow-2xl"
+                         style="margin-left:calc(-80px - 1.5rem); margin-top:60px">
+                        
+                        <p class="text-xs tracking-widest uppercase text-gray-400 mb-6">03</p>
+                        <h2 class="font-cormorant text-5xl lg:text-6xl font-light mb-4" style="line-height:0.9">
+                            <span class="overflow-clip"><span class="slide-up hall-title">17 Halls.</span></span><br>
+                            <span class="overflow-clip"><span class="slide-up hall-title">4 Main</span></span><br>
+                            <span class="overflow-clip"><span class="slide-up hall-title text-[#8b7355]"><em>Configurations.</em></span></span>
+                        </h2>
+                        <p class="text-xs text-gray-400 font-light mb-12 leading-relaxed max-w-xs">
+                            Hover over each space to preview. Each hall can be arranged independently or opened into one grand floor.
+                        </p>
+
+                        <div class="flex flex-col w-full font-public text-2xl font-light">
+                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="regence">
+                                <div>
+                                    <span class="block">Régence</span>
+                                    <span class="text-xs text-gray-400 tracking-wide font-light">Up to 250 guests</span>
+                                </div>
+                                <span class="text-xs tracking-widest text-gray-300 font-normal">01</span>
+                            </div>
+                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="cartier">
+                                <div>
+                                    <span class="block">Cartier</span>
+                                    <span class="text-xs text-gray-400 tracking-wide font-light">Up to 200 guests</span>
+                                </div>
+                                <span class="text-xs tracking-widest text-gray-300 font-normal">02</span>
+                            </div>
+                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="mont-royal">
+                                <div>
+                                    <span class="block">Mont-Royal</span>
+                                    <span class="text-xs text-gray-400 tracking-wide font-light">Up to 100 guests</span>
+                                </div>
+                                <span class="text-xs tracking-widest text-gray-300 font-normal">03</span>
+                            </div>
+                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="plaza" style="border-bottom:none">
+                                <div>
+                                    <span class="block">The Grand Ballroom</span>
+                                    <span class="text-xs text-gray-400 tracking-wide font-light">Full venue — up to 900 guests</span>
+                                </div>
+                                <span class="text-xs tracking-widest text-gray-300 font-normal">04</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+             04  THE DIFFERENTIATORS (dark section)
+        ════════════════════════════════════════════ -->
+        <section class="py-40 px-8 lg:px-12 bg-[#0d0d0d] text-white">
+            <div class="grid-12 w-full">
+
+                <!-- Label -->
+                <div class="col-start-2 col-span-10 mb-20">
+                    <div class="flex items-center gap-6 mb-8">
+                        <span class="text-xs tracking-widest uppercase text-gray-600">04</span>
+                        <span class="flex-1" style="border-top:0.5px solid rgba(255,255,255,0.08)"></span>
+                        <span class="text-xs tracking-widest uppercase text-gray-600">Why Plaza Centre-Ville</span>
+                    </div>
+                    <h2 class="font-cormorant text-5xl lg:text-6xl font-light" style="line-height:0.9">
+                        <span class="overflow-clip"><span class="slide-up diff-title">What you won't</span></span><br>
+                        <span class="overflow-clip"><span class="slide-up diff-title text-[#8b7355]"><em>find anywhere else.</em></span></span>
+                    </h2>
+                </div>
+
+                <!-- Stats row -->
+                <div class="col-start-2 col-span-10">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-0">
+                        <div class="stat-item pr-8" style="border-right:0.5px solid rgba(255,255,255,0.08)">
+                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">10K</div>
+                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">sq ft</div>
+                            <div class="text-sm text-gray-400 font-light">Open floor. No pillars breaking your sight lines.</div>
+                        </div>
+                        <div class="stat-item px-8" style="border-right:0.5px solid rgba(255,255,255,0.08)">
+                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">18</div>
+                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">ft ceilings</div>
+                            <div class="text-sm text-gray-400 font-light">Grand scale impossible to replicate downtown.</div>
+                        </div>
+                        <div class="stat-item px-8" style="border-right:0.5px solid rgba(255,255,255,0.08)">
+                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">100</div>
+                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">Gbps fiber</div>
+                            <div class="text-sm text-gray-400 font-light">Certified. Included. Nobody else has this downtown.</div>
+                        </div>
+                        <div class="stat-item pl-8">
+                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">$10</div>
+                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">indoor parking</div>
+                            <div class="text-sm text-gray-400 font-light">Indoor. Downtown Montréal. Locked in the lease.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Separator -->
+                <div class="col-start-2 col-span-10 my-20" style="border-top:0.5px solid rgba(255,255,255,0.08)"></div>
+
+                <!-- Hotel independence note -->
+                <div class="col-start-2 col-span-5">
+                    <h3 class="font-cormorant text-3xl font-light mb-6 text-white" style="line-height:1.1">
+                        Stay at the Intercontinental.<br>
+                        <em class="text-[#8b7355]">Use your points. Host here.</em>
+                    </h3>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed">
+                        We are not a hotel. Your guests are never obligated to book a single room with us. Corporate clients affiliated with IHG, Marriott, or any other brand can accumulate their points at the hotel of their choice—and still hold their conference here. Maximum savings. Zero compromise.
+                    </p>
+                </div>
+
+                <div class="col-start-7 col-span-5">
+                    <h3 class="font-cormorant text-3xl font-light mb-6 text-white" style="line-height:1.1">
+                        No union. No surprise<br>
+                        <em class="text-[#8b7355]">line items. Ever.</em>
+                    </h3>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed">
+                        Move a table? Fine. Want a different chair? Done. At a unionized hotel venue, every request becomes an invoice. Here, we roll up our sleeves—the owners are on-site—and what we say is included, is included. That's why clients who came once haven't left.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+             05  UNDERGROUND CONNECTION — RESO Map
+        ════════════════════════════════════════════ -->
+        <section class="py-40 px-8 lg:px-12 bg-[#0a0a0a] text-white border-t border-white/5">
+            <div class="grid-12 w-full items-center">
+
+                <!-- Text -->
+                <div class="col-start-2 col-span-4 z-10">
+                    <p class="text-xs tracking-widest uppercase text-gray-600 mb-8">05 / Location</p>
+                    <h2 class="font-cormorant text-5xl lg:text-6xl font-light mb-10" style="line-height:0.9">
+                        <span class="overflow-clip"><span class="slide-up map-title">Underground</span></span><br>
+                        <span class="overflow-clip"><span class="slide-up map-title text-[#8b7355]"><em>Connection.</em></span></span>
+                    </h2>
+                    <div class="overflow-clip mb-10">
+                        <p class="text-gray-400 font-light text-sm leading-relaxed slide-up map-title">
+                            Tied to Metro Bonaventure via the RESO underground network. Guests arrive sheltered from the elements — no coat-check scramble in February. $10 indoor parking, deal signed into our lease, unchanged.
+                        </p>
+                    </div>
+                    <ul class="space-y-3 text-sm font-light">
+                        <li class="flex justify-between border-b border-white/8 pb-3">
+                            <span class="text-[#8b7355] uppercase tracking-widest text-xs">Metro</span>
+                            <span class="text-gray-400">Bonaventure — 3 min walk</span>
+                        </li>
+                        <li class="flex justify-between border-b border-white/8 pb-3">
+                            <span class="text-[#8b7355] uppercase tracking-widest text-xs">RESO Access</span>
+                            <span class="text-gray-400">Full underground city link</span>
+                        </li>
+                        <li class="flex justify-between pb-3">
+                            <span class="text-[#8b7355] uppercase tracking-widest text-xs">Parking</span>
+                            <span class="text-gray-400">$10 / day, indoor & connected</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Map SVG -->
+                <div class="col-start-7 col-span-5 h-[560px] flex items-center justify-center bg-[#111] p-12 relative overflow-hidden">
+                    <svg viewBox="0 0 500 500" class="w-full h-full" style="stroke-width:0.5px; fill:none; stroke:currentColor">
+                        <!-- Building outline -->
+                        <rect x="210" y="90" width="140" height="180" class="map-building" style="stroke:#fff; stroke-width:0.8px"/>
+                        <!-- Metro line -->
+                        <path d="M 40 430 L 150 430 L 280 300 L 280 270" class="map-line" style="stroke:#fff"/>
+                        <!-- RESO connector -->
+                        <path d="M 280 270 L 280 250 L 280 180" class="map-line" style="stroke:rgba(139,115,85,0.6); stroke-dasharray:5 6"/>
+                        <!-- Nodes -->
+                        <circle cx="150" cy="430" r="4" style="fill:transparent; stroke:#fff"/>
+                        <circle cx="280" cy="300" r="4" style="fill:transparent; stroke:#fff"/>
+                        <circle cx="280" cy="270" r="7" class="map-node" style="fill:#fff; stroke:#fff"/>
+                        <!-- Labels -->
+                        <text x="280" y="68"  style="fill:#fff; stroke:none; font-size:9px; font-family:'Public Sans'; letter-spacing:0.12em; text-anchor:middle" class="map-text">PLAZA CENTRE-VILLE</text>
+                        <text x="120" y="455" style="fill:#666; stroke:none; font-size:10px; font-family:'Public Sans'" class="map-text">Métro Bonaventure</text>
+                        <text x="220" y="320" style="fill:#666; stroke:none; font-size:10px; font-family:'Public Sans'" class="map-text">RESO</text>
+                        <text x="335" y="185" style="fill:rgba(139,115,85,0.7); stroke:none; font-size:9px; font-family:'Public Sans'; letter-spacing:0.08em" class="map-text">$10 Parking</text>
+                    </svg>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+             06  SOCIAL PROOF / TESTIMONIALS
+        ════════════════════════════════════════════ -->
+        <section class="py-40 px-8 lg:px-12 bg-[#fcfbf9] border-t border-gray-100">
+            <div class="grid-12 w-full">
+
+                <div class="col-start-2 col-span-10 mb-16">
+                    <div class="flex items-center gap-6 mb-4">
+                        <span class="text-xs tracking-widest uppercase text-gray-400">06</span>
+                        <span class="flex-1 thin-rule"></span>
+                        <span class="text-xs tracking-widest uppercase text-gray-400">From Our Clients</span>
+                    </div>
+                </div>
+
+                <!-- Testimonial 1 -->
+                <div class="col-start-2 col-span-4 fade-up-init testimonial-item">
+                    <div class="testimonial-mark mb-4">&ldquo;</div>
+                    <p class="font-cormorant text-2xl font-light italic leading-tight mb-6">
+                        When they came, they weren't leaving. The flexibility here is something you simply don't get at a hotel.
+                    </p>
+                    <p class="text-xs tracking-widest uppercase text-gray-400">— Irish Man of the Year Gala, 10-year client</p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="col-start-7 col-span-4 fade-up-init testimonial-item" style="transition-delay:0.15s">
+                    <div class="testimonial-mark mb-4">&ldquo;</div>
+                    <p class="font-cormorant text-2xl font-light italic leading-tight mb-6">
+                        We do Les Affaires twice a week. The owners are there. The setup changes to what we need. That's unique.
+                    </p>
+                    <p class="text-xs tracking-widest uppercase text-gray-400">— Recurring Corporate Client</p>
+                </div>
+
+                <!-- CTA within testimonial section -->
+                <div class="col-start-2 col-span-10 mt-20">
+                    <hr class="thin-rule mb-12">
+                    <p class="font-cormorant text-xl font-light text-gray-500 italic max-w-xl">
+                        "The biggest obstacle for us is to be known. When they come, they are not leaving."
+                    </p>
+                    <p class="text-xs text-gray-400 mt-2">— Founder, Plaza Centre-Ville</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+             07  PHOTO GALLERY STRIP
+        ════════════════════════════════════════════ -->
+        <section class="py-0 overflow-hidden">
+            <div class="flex" id="gallery-strip">
+                <img src="./images/DSC05368_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                     class="h-[40vh] w-auto flex-none object-cover" alt="">
+                <img src="./images/293627666_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                     class="h-[40vh] w-auto flex-none object-cover" alt="">
+                <img src="./images/2_1_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                     class="h-[40vh] w-auto flex-none object-cover" alt="">
+                <img src="./images/DSC05378_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                     class="h-[40vh] w-auto flex-none object-cover" alt="">
+                <img src="./images/B_S-2193_resize_42bf47b0f9fbd735616adfa1279cce1a.JPG"
+                     class="h-[40vh] w-auto flex-none object-cover" alt="">
+                <img src="./images/304552385_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
+                     class="h-[40vh] w-auto flex-none object-cover" alt="">
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════
+             08  CONTACT / CTA
+        ════════════════════════════════════════════ -->
+        <section id="contact" class="py-40 px-8 lg:px-12 bg-[#fcfbf9] border-t border-gray-100">
+            <div class="grid-12 w-full">
+
+                <div class="col-start-2 col-span-4">
+                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-6">08 / Contact</p>
+                    <h2 class="font-cormorant text-5xl font-light mb-8" style="line-height:0.9">
+                        Let's build<br>
+                        <em class="text-[#8b7355]">your event.</em>
+                    </h2>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-10">
+                        We respond to every inquiry. For large corporate bookings, we can arrange an in-person walkthrough the same week.
+                    </p>
+                    <ul class="space-y-4 text-sm font-light">
+                        <li class="flex gap-4">
+                            <span class="text-[#8b7355] uppercase tracking-widest text-xs w-16 flex-none pt-0.5">Address</span>
+                            <span class="text-gray-600">777 Robert-Bourassa Blvd,<br>Montréal, QC H3C 3Z7</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="text-[#8b7355] uppercase tracking-widest text-xs w-16 flex-none pt-0.5">Instagram</span>
+                            <a href="https://www.instagram.com/plaza_centre_ville/" target="_blank" class="text-gray-600 hover:text-[#8b7355] transition-colors">@plaza_centre_ville</a>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="text-[#8b7355] uppercase tracking-widest text-xs w-16 flex-none pt-0.5">Network</span>
+                            <span class="text-gray-600">Part of PMG · 15 venues across Greater Montréal</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contact form -->
+                <div class="col-start-7 col-span-5">
+                    <form class="space-y-8">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">First Name</label>
+                                <input type="text" placeholder="Marie" class="form-input">
+                            </div>
+                            <div>
+                                <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Last Name</label>
+                                <input type="text" placeholder="Dupont" class="form-input">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Email</label>
+                            <input type="email" placeholder="marie@company.com" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Event Type</label>
+                            <select class="form-input text-gray-500">
+                                <option value="" disabled selected>Select event type</option>
+                                <option>Wedding</option>
+                                <option>Gala / Social</option>
+                                <option>Corporate Conference</option>
+                                <option>Trade Show</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Approximate Guest Count</label>
+                            <input type="text" placeholder="e.g. 350" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Message</label>
+                            <textarea rows="3" placeholder="Date, vision, questions…" class="form-input resize-none" style="padding-bottom:1rem"></textarea>
+                        </div>
+                        <button type="submit"
+                                class="w-full bg-[#1a1a1a] text-white py-4 text-xs tracking-widest uppercase hover:bg-[#8b7355] transition-colors duration-300">
+                            Send Inquiry
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="ml-[60px] py-16 px-8 lg:px-12 bg-[#0a0a0a] text-white border-t border-white/5">
+        <div class="grid-12 w-full">
+            <div class="col-start-2 col-span-3">
+                <p class="text-xs tracking-widest uppercase text-gray-600 mb-4">Plaza Centre-Ville</p>
+                <p class="text-gray-600 text-xs font-light leading-relaxed">
+                    Part of the PMG Group — <br>a network of 15 Montreal event venues.
+                </p>
+            </div>
+            <div class="col-start-5 col-span-2">
+                <p class="text-xs tracking-widest uppercase text-gray-700 mb-4">Navigate</p>
+                <ul class="space-y-2 text-xs text-gray-500 font-light">
+                    <li><a href="#experience" class="hover:text-[#8b7355]">Social & Weddings</a></li>
+                    <li><a href="#experience" class="hover:text-[#8b7355]">Corporate</a></li>
+                    <li><a href="#halls" class="hover:text-[#8b7355]">The Halls</a></li>
+                    <li><a href="#contact" class="hover:text-[#8b7355]">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-start-7 col-span-2">
+                <p class="text-xs tracking-widest uppercase text-gray-700 mb-4">PMG Venues</p>
+                <a href="https://plazapmg.com/our-venues/" target="_blank"
+                   class="text-xs text-gray-500 font-light hover:text-[#8b7355]">View all 15 locations →</a>
+            </div>
+            <div class="col-start-10 col-span-3 text-right">
+                <p class="text-gray-700 text-xs font-light">© 2025 Plaza Centre-Ville / PMG Group</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ─────────────────────────────────────────
+         SCRIPTS
+    ──────────────────────────────────────────── -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ── HERO ──────────────────────────────
+        gsap.to("#hero-img-wrap", {
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+            duration: 1.3,
+            ease: "power3.inOut",
+            delay: 0.2
+        });
+        gsap.to("#hero-img", {
+            scale: 1,
+            duration: 10,
+            ease: "power1.out",
+            delay: 0.2
+        });
+        gsap.to(".slide-up", {
+            y: 0,
+            duration: 1.2,
+            stagger: 0.12,
+            ease: "power4.out",
+            delay: 0.6
+        });
+        gsap.to(".fade-up-init", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power3.out",
+            delay: 1.2
+        });
+
+        // ── EXPERIENCE SECTION ───────────────
+        gsap.to(".exp-title", {
+            y: 0,
+            duration: 1.2,
+            stagger: 0.12,
+            ease: "power4.out",
+            scrollTrigger: { trigger: "#experience", start: "top 65%" }
+        });
+        gsap.to("#exp-label, #mode-tabs", {
+            opacity: 1, y: 0,
+            duration: 1, stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: { trigger: "#experience", start: "top 70%" }
+        });
+
+        // ── HALLS SECTION ────────────────────
+        gsap.to("#halls-img-wrap", {
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+            duration: 1.2,
+            ease: "power3.inOut",
+            scrollTrigger: { trigger: "#halls", start: "top 60%" }
+        });
+        gsap.to(".hall-title", {
+            y: 0,
+            duration: 1.2,
+            stagger: 0.12,
+            ease: "power4.out",
+            scrollTrigger: { trigger: "#halls", start: "top 55%" }
+        });
+        gsap.to("#halls .fade-up-init", {
+            opacity: 1, y: 0,
+            duration: 0.9,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: "#halls", start: "top 50%" }
+        });
+
+        // ── DIFFERENTIATORS ──────────────────
+        gsap.to(".diff-title", {
+            y: 0,
+            duration: 1.2,
+            stagger: 0.12,
+            ease: "power4.out",
+            scrollTrigger: { trigger: ".diff-title", start: "top 75%" }
+        });
+
+        // ── MAP ──────────────────────────────
+        gsap.to(".map-title", {
+            y: 0,
+            duration: 1.2,
+            stagger: 0.12,
+            ease: "power4.out",
+            scrollTrigger: { trigger: ".map-title", start: "top 75%" }
+        });
+        gsap.to(".map-line", {
+            strokeDashoffset: 0,
+            duration: 2,
+            ease: "power2.inOut",
+            scrollTrigger: { trigger: ".map-line", start: "top 70%" }
+        });
+        gsap.fromTo(".map-building",
+            { strokeDasharray: "0 600", opacity: 0 },
+            { strokeDasharray: "600 0", opacity: 1, duration: 1.5, delay: 0.8, ease: "power2.out",
+              scrollTrigger: { trigger: ".map-building", start: "top 70%" } }
+        );
+        gsap.fromTo(".map-node, .map-text",
+            { opacity: 0, y: 8 },
+            { opacity: 1, y: 0, duration: 1, stagger: 0.2, delay: 1.5, ease: "power2.out",
+              scrollTrigger: { trigger: ".map-node", start: "top 70%" } }
+        );
+
+        // ── TESTIMONIALS ─────────────────────
+        gsap.to(".testimonial-item", {
+            opacity: 1, y: 0,
+            duration: 1.1,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: { trigger: ".testimonial-item", start: "top 75%" }
+        });
+
+        // ── GALLERY MARQUEE ──────────────────
+        gsap.to("#gallery-strip", {
+            x: "-30%",
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#gallery-strip",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1.5
+            }
+        });
+
+        // ── HALL HOVER LIST ──────────────────
+        const hallItems  = document.querySelectorAll('.hall-item');
+        const hallImages = document.querySelectorAll('.hall-preview-img');
+        hallItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const target = item.getAttribute('data-target');
+                hallImages.forEach(img => {
+                    img.classList.toggle('active', img.getAttribute('data-hall') === target);
+                });
+            });
+        });
+
+        // ── MODE TABS (Social / Corporate) ────
+        const modeBtns   = document.querySelectorAll('.mode-btn');
+        const modePanels = document.querySelectorAll('.mode-panel');
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-mode');
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                modePanels.forEach(p => {
+                    p.classList.toggle('active', p.id === `panel-${mode}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
