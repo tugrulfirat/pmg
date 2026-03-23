@@ -3,967 +3,983 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plaza Centre-Ville | Downtown Montreal's Premier Event Venue</title>
+    <title>Plaza Centre-Ville | Curated Venues</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Inter to match the Design Hotels bold sans-serif snapshot -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Public+Sans:ital,wght@0,200;0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- GSAP CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
+
     <style>
-        :root {
-            --gold: #8b7355;
-            --cream: #fcfbf9;
-            --ink: #1a1a1a;
-        }
-
-        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
-        .font-public    { font-family: 'Public Sans', sans-serif; }
-
         body {
-            background-color: var(--cream);
-            color: var(--ink);
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
         }
-
-        /* Grain overlay */
-        .noise-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* 0px border-radius system-wide */
-        * { border-radius: 0 !important; }
-
-        /* 12-col grid */
-        .grid-12 {
-            display: grid;
-            grid-template-columns: repeat(12, minmax(0, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* Sidebar Nav */
-        .sidebar-nav {
-            position: fixed;
-            left: 0; top: 0;
-            width: 60px; height: 100vh;
-            border-right: 0.5px solid rgba(0,0,0,0.08);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 100;
-            background-color: var(--cream);
-        }
-        .brand-vertical {
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
+        .btn-outline-white {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 9999px;
+            padding: 0.6rem 1.8rem;
             font-size: 0.75rem;
-        }
-
-        /* Image reveal mask */
-        .mask-reveal {
-            clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-        }
-
-        /* Hero image */
-        .hero-img { transform: scale(1.1); }
-
-        /* Hall list hover */
-        .hall-preview-img {
-            transition: filter 0.4s ease, opacity 0.4s ease;
-            filter: blur(15px);
-            opacity: 0;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-        }
-        .hall-preview-img.active { filter: blur(0); opacity: 1; }
-
-        .hall-item {
-            cursor: pointer;
-            transition: color 0.3s ease;
-            padding: 1.5rem 0;
-            border-bottom: 0.5px solid rgba(0,0,0,0.1);
-        }
-        .hall-item:hover { color: var(--gold); }
-
-        /* Text slide-up */
-        .overflow-clip { overflow: hidden; display: inline-block; vertical-align: top; }
-        .slide-up { display: inline-block; transform: translateY(110%); }
-
-        /* Fade-up placeholders */
-        .fade-up-init { opacity: 0; transform: translateY(20px); }
-
-        /* SVG map line */
-        .map-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
-
-        /* Divider */
-        .thin-rule { border: none; border-top: 0.5px solid rgba(0,0,0,0.12); }
-
-        /* Event-type toggle tabs */
-        .mode-btn {
-            font-family: 'Public Sans', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            padding: 0.6rem 1.6rem;
-            border: 0.5px solid rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             background: transparent;
-        }
-        .mode-btn.active {
-            background: var(--ink);
             color: #fff;
-            border-color: var(--ink);
         }
-
-        /* Mode panels */
-        .mode-panel { display: none; }
-        .mode-panel.active { display: block; }
-
-        /* Feature chip */
-        .feature-chip {
-            display: flex; align-items: flex-start; gap: 1rem;
-            padding: 1.5rem 0;
-            border-bottom: 0.5px solid rgba(0,0,0,0.08);
+        .btn-outline-white:hover { background: #fff; color: #1a1a1a; }
+        .promise-mark {
+            font-size: 8rem;
+            line-height: 0.6;
+            color: rgba(255,255,255,0.06);
+            font-family: Georgia, serif;
+            display: block;
+            margin-bottom: 1rem;
         }
-        .chip-num {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
-            color: var(--gold);
-            min-width: 2rem;
-            padding-top: 2px;
-        }
-
-        /* Stat block */
-        .stat-item {
-            padding: 2.5rem 0;
-            border-top: 0.5px solid rgba(255,255,255,0.12);
-        }
-
-        /* CTA section */
-        .cta-link {
-            display: inline-block;
-            border-bottom: 0.5px solid var(--ink);
-            padding-bottom: 2px;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            transition: color 0.3s, border-color 0.3s;
-        }
-        .cta-link:hover { color: var(--gold); border-color: var(--gold); }
-
-        /* Testimonial */
-        .testimonial-mark {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 6rem;
-            line-height: 0.5;
-            color: var(--gold);
-            opacity: 0.4;
-        }
-
-        /* Contact form inputs */
-        .form-input {
-            width: 100%;
+        .feat-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .feat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+        /* Minimal Buttons */
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1a1a1a;
+            border-radius: 9999px;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
             background: transparent;
-            border: none;
-            border-bottom: 0.5px solid rgba(0,0,0,0.2);
-            padding: 0.75rem 0;
-            font-family: 'Public Sans', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 300;
-            outline: none;
-            transition: border-color 0.3s;
+            color: #1a1a1a;
         }
-        .form-input:focus { border-color: var(--gold); }
-        .form-input::placeholder { color: rgba(0,0,0,0.35); }
+        .btn-outline:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
 
-        /* Footer */
-        footer a { transition: color 0.3s; }
-        footer a:hover { color: var(--gold); }
+        /* Typography */
+        .h-bold {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* View Toggle Styling */
+        .toggle-btn {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #999;
+            transition: color 0.3s;
+            cursor: pointer;
+            letter-spacing: -0.02em;
+        }
+        .toggle-btn.active {
+            color: #1a1a1a;
+        }
+        .toggle-btn:hover {
+            color: #555;
+        }
+
+        /* Editorial Image Grading */
+        .img-editorial {
+            filter: contrast(1.05) saturate(0.85) brightness(0.98);
+            transition: filter 0.5s ease;
+        }
+        .group:hover .img-editorial {
+            filter: contrast(1.1) saturate(1) brightness(1);
+        }
+
+        /* Tonal Overlays */
+        .overlay-corporate {
+            background-color: #3A3F47;
+            mix-blend-mode: multiply;
+            opacity: 0.04;
+            pointer-events: none;
+        }
+        .overlay-social {
+            background-color: #B58B5D;
+            mix-blend-mode: multiply;
+            opacity: 0.06;
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="font-public antialiased selection:bg-[#8b7355] selection:text-white">
+<body class="flex flex-col min-h-screen bg-[#fafafa]">
+    <main class="flex-grow flex flex-col relative">
 
-    <!-- Grain overlay -->
-    <div class="noise-overlay"></div>
 
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar-nav">
-        <div class="brand-vertical font-public tracking-widest text-gray-800">
-            Plaza Centre-Ville
+    <!-- Top Navigation -->
+    <nav class="absolute top-0 w-full z-50 flex justify-between items-center px-6 py-6 text-white overflow-hidden">
+        <!-- Top Gradient Overlay -->
+        <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent pointer-events-none -z-10"></div>
+        
+        <!-- Hamburger -->
+        <button class="flex items-center justify-center w-10 h-10 border border-white/30 rounded-full hover:bg-white/10 transition backdrop-blur-sm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <!-- Logo -->
+        <span class="text-xl font-bold tracking-tight drop-shadow-sm">PLAZA CENTRE-VILLE</span>
+        <!-- Actions -->
+        <div class="flex items-center gap-4">
+            <button class="px-6 py-2 bg-[#F5F0E8] text-[#1a1a1a] font-bold text-xs uppercase tracking-widest rounded-full shadow-lg hover:bg-white transition-all transform hover:scale-105">Inquire</button>
         </div>
-    </aside>
+    </nav>
 
-    <main class="ml-[60px]">
-
-        <!-- ═══════════════════════════════════════════
-             01  HERO
-        ════════════════════════════════════════════ -->
-        <section class="min-h-screen pt-32 pb-16 px-8 lg:px-12 relative overflow-hidden flex items-center">
-            <div class="grid-12 w-full">
-
-                <!-- Text: cols 2–5 -->
-                <div class="col-start-2 col-span-4 z-10 flex flex-col justify-center">
-                    <p class="text-xs tracking-widest uppercase mb-6 fade-up-init text-gray-400">Downtown Montréal &mdash; Est. 2015</p>
-
-                    <h1 class="font-cormorant text-7xl lg:text-[7.5rem] font-light mb-8" style="line-height:0.85">
-                        <span class="overflow-clip"><span class="slide-up">Where Every</span></span><br>
-                        <span class="overflow-clip"><span class="slide-up">Event Becomes</span></span><br>
-                        <span class="overflow-clip"><span class="slide-up text-[#8b7355]"><em>Unforgettable</em></span></span>
-                    </h1>
-
-                    <div class="overflow-clip mb-12 max-w-sm">
-                        <p class="text-base text-gray-500 font-light leading-relaxed slide-up">
-                            10,000 sq&nbsp;ft of blank canvas. 18&nbsp;ft ceilings. 17 spaces. Up to 900 guests. In the heart of downtown Montréal, connected to the underground city.
-                        </p>
-                    </div>
-
-                    <div class="flex gap-8 fade-up-init">
-                        <a href="#experience" class="cta-link">Explore the Venue</a>
-                        <a href="#contact"    class="cta-link">Request a Quote</a>
-                    </div>
+    <!-- 1. Hero Cover Image -->
+    <section class="relative h-[92vh] w-full">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20 z-10"></div>
+        <img src="images/unified_hero_authentic_1773677468195.png" alt="Grand Ballroom Hero" class="absolute inset-0 w-full h-full object-cover img-editorial">
+        <div class="relative z-20 h-full max-w-[1400px] mx-auto px-8 w-full flex flex-col justify-end pb-32">
+            <div class="max-w-5xl">
+                <p class="hero-reveal text-[10px] uppercase tracking-[0.45em] font-bold text-white/50 mb-6 opacity-0">Downtown Montr&eacute;al &nbsp;&middot;&nbsp; 777 boul. Robert-Bourassa</p>
+                <h1 class="hero-reveal text-5xl md:text-7xl lg:text-[5.5rem] h-bold text-white leading-[1.1] mb-5 opacity-0">
+                    Same venue. Completely different experience.
+                </h1>
+                <p class="hero-reveal text-base md:text-xl text-white/65 font-light max-w-2xl leading-relaxed mb-10 opacity-0">
+                    10,000&nbsp;sq&nbsp;ft &middot; 18&nbsp;ft ceilings &middot; Corporate or social &middot; The owners are there, every single event day.
+                </p>
+                <div class="hero-reveal flex flex-wrap gap-4 items-center opacity-0">
+                    <a href="#" class="btn-outline-white">Inquire for Availability</a>
+                    <a href="#our-promise" class="text-white/55 text-[10px] uppercase tracking-widest font-bold flex items-center gap-2 hover:text-white transition">
+                        Our Promise <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                    </a>
                 </div>
-
-                <!-- Image: cols 6–12 -->
-                <div class="col-start-6 col-span-7 relative h-[88vh] overflow-hidden mask-reveal" id="hero-img-wrap">
-                    <img src="./images/DSC05374_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                         alt="Plaza Centre-Ville Grand Ballroom"
-                         class="w-full h-full object-cover hero-img" id="hero-img">
-                    <!-- Floating caption pill -->
-                    <div class="absolute bottom-8 left-8 fade-up-init">
-                        <span class="bg-white/90 px-4 py-2 text-xs tracking-widest uppercase text-gray-700">Grand Ballroom — up to 900 guests</span>
-                    </div>
-                </div>
-
             </div>
-        </section>
+        </div>
+        <!-- Stats strip -->
+        <div class="absolute bottom-0 left-0 right-0 z-30 bg-black/55 backdrop-blur-md border-t border-white/10">
+            <div class="max-w-[1400px] mx-auto px-8 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+                <div class="py-5 px-6 text-center"><p class="text-2xl md:text-3xl font-bold text-white h-bold">10,000</p><p class="text-[9px] uppercase tracking-widest text-white/45 mt-1">Square feet</p></div>
+                <div class="py-5 px-6 text-center"><p class="text-2xl md:text-3xl font-bold text-white h-bold">18 ft</p><p class="text-[9px] uppercase tracking-widest text-white/45 mt-1">Ceilings</p></div>
+                <div class="py-5 px-6 text-center"><p class="text-2xl md:text-3xl font-bold text-[#D4A96A] h-bold">900+</p><p class="text-[9px] uppercase tracking-widest text-white/45 mt-1">Max capacity</p></div>
+                <div class="py-5 px-6 text-center"><p class="text-2xl md:text-3xl font-bold text-white h-bold">$10</p><p class="text-[9px] uppercase tracking-widest text-white/45 mt-1">Indoor parking</p></div>
+            </div>
+        </div>
+    </section>
 
-        <!-- ═══════════════════════════════════════════
-             02  YOUR EXPERIENCE — SOCIAL vs CORPORATE
-        ════════════════════════════════════════════ -->
-        <section id="experience" class="py-40 px-8 lg:px-12 border-t border-gray-100">
-            <div class="grid-12 w-full items-start">
+    
+    <!-- Global Intro — Owner Quote -->
+    <section class="max-w-[960px] mx-auto px-6 py-24 text-center">
+        <span class="block text-[10px] uppercase tracking-[0.35em] font-bold text-gray-400 mb-8">From the proprietors</span>
+        <blockquote class="text-xl md:text-[1.85rem] font-light leading-relaxed text-gray-900 max-w-4xl mx-auto">
+            <span class="text-[#B58B5D] font-bold text-5xl leading-none align-top">&ldquo;</span>At Plaza Centre-Ville, hospitality isn’t just a service—it’s a personal commitment. While many venues manage from a distance, we are on the floor for every event, ensuring every detail matches your vision. We roll up our sleeves because we believe the owners should be as invested in your success as you are. That is the Plaza difference.<span class="text-[#B58B5D] font-bold text-5xl leading-none align-bottom">&rdquo;</span>
+        </blockquote>
+        <div class="mt-10 flex items-center justify-center gap-4">
+            <div class="h-px w-12 bg-gray-200"></div>
+            <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">The Proprietors &middot; Plaza Centre-Ville</p>
+            <div class="h-px w-12 bg-gray-200"></div>
+        </div>
+    </section>
 
-                <!-- Section label -->
-                <div class="col-start-2 col-span-10 mb-16">
-                    <div class="flex items-center gap-6 mb-4 fade-up-init" id="exp-label">
-                        <span class="text-xs tracking-widest uppercase text-gray-400">02</span>
-                        <span class="flex-1 thin-rule"></span>
-                        <span class="text-xs tracking-widest uppercase text-gray-400">Choose Your Experience</span>
+    <!-- 2. The Experience Toggle (Massive Headers) -->
+    <section class="border-b border-gray-100 bg-white sticky top-0 z-40 shadow-sm transition-all">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8 py-8 px-6">
+            <span class="text-xs uppercase tracking-widest font-bold text-gray-400">View Experience:</span>
+            <div class="flex gap-8 items-center">
+                <button id="btn-corporate" class="toggle-btn active text-lg">Corporate Engagements</button>
+                <span class="text-gray-200">|</span>
+                <button id="btn-social" class="toggle-btn text-lg">Weddings & Social</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- UNIVERSAL AMENITIES SECTION — redesigned dark -->
+    <section class="w-full bg-[#111] py-24">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
+                <div>
+                    <span class="text-[10px] uppercase tracking-[0.35em] font-bold text-[#B58B5D] block mb-4">Included in every event</span>
+                    <h2 class="text-4xl md:text-5xl h-bold text-white leading-tight">What you get.<br>No asterisks.</h2>
+                </div>
+                <p class="text-gray-400 max-w-sm text-sm leading-relaxed">Every item below is included, confirmed at signing, unchanged on event day. No union surcharges. No last-minute fees.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5">
+                <!-- Bar & Beverage -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"></path></svg>
                     </div>
-                    <h2 class="font-cormorant text-5xl lg:text-6xl font-light" style="line-height:0.9">
-                        <span class="overflow-clip"><span class="slide-up exp-title">The same space,</span></span><br>
-                        <span class="overflow-clip"><span class="slide-up exp-title text-[#8b7355]"><em>entirely different worlds.</em></span></span>
-                    </h2>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Bar &amp; Beverage</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">Full-service bar staffing included. No corkage fees, no last-minute charges.</p>
+                    </div>
                 </div>
-
-                <!-- Toggle buttons -->
-                <div class="col-start-2 col-span-10 mb-12 fade-up-init" id="mode-tabs">
-                    <button class="mode-btn active" data-mode="social">Social & Weddings</button>
-                    <button class="mode-btn" data-mode="corporate" style="margin-left:-0.5px">Corporate</button>
+                <!-- Hotel & Airport -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Hotel &amp; Airport Proximity</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">Direct underground RESO corridor from Bonaventure Métro. Guests arrive indoors, no matter the weather.</p>
+                    </div>
                 </div>
+                <!-- Parking -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Parking</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">$10 flat rate. Indoor. Downtown. We have a signed deal — you will not find this anywhere else in the city.</p>
+                    </div>
+                </div>
+                <!-- WiFi -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Free WiFi</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">100 Gbps dedicated fiber optic. Certified. Not hotel WiFi — real infrastructure for hybrid events and live streaming.</p>
+                    </div>
+                </div>
+                <!-- Dedicated Staff -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Dedicated Staff</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">The owners are on-site for every event. Not a manager. The owners themselves.</p>
+                    </div>
+                </div>
+                <!-- Turn-Key Packages -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Turn-Key Packages</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">No asterisks. The price you sign is the price you pay. No union surcharges, no hidden fees.</p>
+                    </div>
+                </div>
+                <!-- Coat Check -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Coat Check</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">Staffed on-site. Included.</p>
+                    </div>
+                </div>
+                <!-- Wheelchair access -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Wheelchair Access</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">Full accessibility — elevators, ramps, dedicated entrances.</p>
+                    </div>
+                </div>
+                <!-- Tailored Menu -->
+                <div class="feat-card bg-[#111] hover:bg-[#161616] p-8 flex items-start gap-5">
+                    <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-[#B58B5D] border border-[#B58B5D]/30 rounded-sm">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Tailored Menu</p>
+                        <p class="text-sm text-gray-400 leading-relaxed">Six dining formats from plated service to interactive stations. Everything handled in-house.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- SOCIAL PANEL -->
-                <div class="col-start-2 col-span-10 mode-panel active" id="panel-social">
-                    <div class="grid-12 w-full items-stretch" style="gap:1.5rem">
-
-                        <!-- Images: two stacked photos filling full column height -->
-                        <div class="col-span-5 grid grid-rows-2 gap-1" style="min-height:700px">
-                            <img src="./images/DSC05366_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                                 alt="Social setup with Chiavari chairs"
-                                 class="w-full h-full object-cover object-center">
-                            <img src="./images/849242581_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                                 alt="Wedding banquet"
-                                 class="w-full h-full object-cover object-center">
+    <!-- OUR PROMISE — split cinematic panel -->
+    <section id="our-promise" class="w-full overflow-hidden mt-16">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Left: dark quote panel -->
+                <div class="bg-[#0e0e0e] px-10 py-20 md:px-16 md:py-24 flex flex-col justify-between min-h-[500px]">
+                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-[#B58B5D]">Our Promise</span>
+                    <div class="my-10">
+                        <span class="promise-mark">&ldquo;</span>
+                        <h2 class="text-3xl md:text-5xl h-bold text-white leading-tight mb-6">The day of your event,<br>we are there.</h2>
+                        <p class="text-gray-400 text-base leading-relaxed">Not just management — us. We roll up our sleeves. We handle the plates. We make sure every detail lands exactly as you imagined.</p>
+                    </div>
+                    <div class="border-t border-white/10 pt-7">
+                        <p class="text-xs uppercase tracking-widest font-bold text-white">The Proprietors</p>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Plaza Centre-Ville</p>
+                    </div>
+                </div>
+                <!-- Right: numbered differentiators -->
+                <div class="bg-white flex flex-col divide-y divide-gray-100">
+                    <div class="px-10 py-10 md:px-14 flex items-start gap-6">
+                        <span class="text-3xl font-bold text-[#B58B5D] leading-none mt-1 flex-shrink-0">01</span>
+                        <div>
+                            <h3 class="text-sm font-bold mb-2 uppercase tracking-wide">The owners — not a manager</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">At every other venue in this city, the owner is never there on event day. We are. That is the difference.</p>
                         </div>
+                    </div>
+                    <div class="px-10 py-10 md:px-14 flex items-start gap-6">
+                        <span class="text-3xl font-bold text-[#B58B5D] leading-none mt-1 flex-shrink-0">02</span>
+                        <div>
+                            <h3 class="text-sm font-bold mb-2 uppercase tracking-wide">The price you sign is the price you pay</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">No union surcharges discovered after the fact. No hidden rental fees. The number on your contract is the number you pay.</p>
+                        </div>
+                    </div>
+                    <div class="px-10 py-10 md:px-14 flex items-start gap-6">
+                        <span class="text-3xl font-bold text-[#B58B5D] leading-none mt-1 flex-shrink-0">03</span>
+                        <div>
+                            <h3 class="text-sm font-bold mb-2 uppercase tracking-wide">No hotel affiliation. No obligations.</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Your guests earn their points at IHG, Marriott, or Fairmont — wherever they choose. No room minimums. No block requirements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                        <!-- Content -->
-                        <div class="col-start-7 col-span-5 pt-4">
-                            <p class="text-xs tracking-widest uppercase text-[#8b7355] mb-4">Social / Weddings / Galas</p>
-                            <h3 class="font-cormorant text-4xl font-light mb-6" style="line-height:1">
-                                Your gathering.<br>Exactly as imagined.
-                            </h3>
-                            <p class="text-gray-500 font-light leading-relaxed mb-10 text-sm">
-                                When it's social, you're not walking into a boardroom. Chiavari chairs in white or black, curated uplighting that rises from the floor in any colour, a cocktail terrace, and a corner stage for your live band. Nothing is forced. Everything bends to your vision.
+
+
+    <!-- MAIN CONTENT CONTAINER (Views Swap Inside Here) -->
+    <div id="content-container" class="relative">
+        
+        <!-- ==============================================
+             CORPORATE VIEW
+        ================================================ -->
+        <div id="view-corporate" class="w-full transition-opacity duration-500 opacity-100">
+            <div class="max-w-[1400px] mx-auto px-6 pt-32 pb-12">
+                <div class="border-t border-gray-100 pt-16">
+                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-gray-400 block mb-4">The Experience</span>
+                    <h2 class="text-4xl md:text-5xl h-bold">Corporate Engagements</h2>
+                </div>
+            </div>
+            <!-- 3. Signature Space Corporate Block -->
+            <section class="max-w-full">
+                <div class="max-w-[1400px] mx-auto px-6 py-24">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                    
+                    <!-- Left Large Block - REBALANCED -->
+                    <div class="lg:col-span-8 flex flex-col justify-end relative min-h-[600px] bg-gray-100 group overflow-hidden">
+                        <img src="images/unified_corporate_canvas_authentic_1773677483321.png" alt="Mont-Royal Suite Corporate Team" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                        <div class="absolute inset-0 overlay-corporate z-10"></div>
+                        <!-- Top Gradient for Label Visibility -->
+                        <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent z-20 pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-20"></div>
+                        <div class="absolute top-8 left-8 text-white z-30 drop-shadow-lg">
+                            <span class="text-xs uppercase tracking-widest font-bold block mb-2">The Canvas</span>
+                        </div>
+                        <div class="relative z-30 p-8 text-white">
+                            <h2 class="text-4xl h-bold mb-2 drop-shadow-lg">The Grand Ballroom (Corporate)</h2>
+                            <p class="text-sm font-medium drop-shadow-md">Up to 900+ Theater | 900 Cocktail (Dance floor removed to maximize floor space for additional seating).</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column Text + Smaller Image -->
+                    <div class="lg:col-span-4 flex flex-col justify-between h-full gap-8">
+                        <div class="bg-transparent flex flex-col justify-center">
+                            <h3 class="text-sm uppercase tracking-widest font-semibold text-gray-400 mb-6 border-b border-gray-200 pb-2">Business Grade</h3>
+                            <p class="text-lg font-medium leading-relaxed mb-6">
+                                Our premier spaces—the <a href="regence.html" class="text-black border-b border-black/20 hover:border-black transition-colors">Régence Suite</a> and the <a href="cartier.html" class="text-black border-b border-black/20 hover:border-black transition-colors">Cartier Boardroom</a>—feature modular designs with dedicated AV zones, 18ft ceilings, and 7 immersive screens. Plug and play perfection.
                             </p>
-
-                            <div class="mb-10">
-                                <div class="feature-chip">
-                                    <span class="chip-num">01</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Chiavari Chairs — white or black</div>
-                                        <div class="text-xs text-gray-400 font-light">Included. Not the corporate stack chairs.</div>
+                            <div>
+                                <a href="#" class="btn-outline">View Configurations</a>
+                            </div>
+                            <!-- Corporate Amenities - ICON GRID (FIX 1) -->
+                            <div class="mt-8 border-t border-gray-100 pt-6">
+                                <h4 class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-6">Corporate Amenities</h4>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-black"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Audiovisual</span>
                                     </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">02</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Ground-Up Uplighting in Any Colour</div>
-                                        <div class="text-xs text-gray-400 font-light">Transform the mood entirely with your palette.</div>
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-black"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Breakout rooms</span>
                                     </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">03</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Cocktail Reception Area</div>
-                                        <div class="text-xs text-gray-400 font-light">Separate arrival space with bar service.</div>
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-black"><path d="M3 3h18v18H3z"></path><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Meeting rooms</span>
                                     </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">04</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Corner Stage for Live Band</div>
-                                        <div class="text-xs text-gray-400 font-light">Full audio integration. No venue charge for the stage.</div>
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-black"><path d="M2 20h20"></path><path d="M7 20v-5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v5"></path><path d="M12 13V8"></path><circle cx="12" cy="6" r="2"></circle></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Executive lounge</span>
                                     </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">05</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Dining: Plated, Stations, or Family-Style</div>
-                                        <div class="text-xs text-gray-400 font-light">Owners on-site the day of your event.</div>
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-black"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Dedicated host</span>
                                     </div>
-                                </div>
-                                <div class="feature-chip" style="border-bottom:none">
-                                    <span class="chip-num">06</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Nearby Photoshoot Locations</div>
-                                        <div class="text-xs text-gray-400 font-light">Downtown Montréal as your backdrop.</div>
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-black"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">24/7 Access</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <ul class="text-sm border-t border-gray-200 pt-6 space-y-3 font-light mb-10">
-                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Seated Capacity</span><span>up to 700 guests</span></li>
-                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Cocktail Capacity</span><span>up to 900 guests</span></li>
-                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Dance Floor</span><span>Yes — full floor integration</span></li>
-                            </ul>
-
-                            <a href="#contact" class="cta-link">Discuss Your Event</a>
                         </div>
-
-                    </div>
-                </div>
-
-                <!-- CORPORATE PANEL -->
-                <div class="col-start-2 col-span-10 mode-panel" id="panel-corporate">
-                    <div class="grid-12 w-full items-stretch" style="gap:1.5rem">
-
-                        <!-- Images -->
-                        <div class="col-span-5 grid grid-rows-2 gap-1" style="min-height:700px">
-                            <img src="./images/IMG_0006_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                                 alt="Corporate conference setup"
-                                 class="w-full h-full object-cover object-center">
-                            <img src="./images/DSC05356_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                                 alt="Corporate banquet"
-                                 class="w-full h-full object-cover object-center">
-                        </div>
-
-                        <!-- Content -->
-                        <div class="col-start-7 col-span-5 pt-4">
-                            <p class="text-xs tracking-widest uppercase text-[#8b7355] mb-4">Conferences / Galas / Trade Shows / Exams</p>
-                            <h3 class="font-cormorant text-4xl font-light mb-6" style="line-height:1">
-                                The space serious<br>companies need.
-                            </h3>
-                            <p class="text-gray-500 font-light leading-relaxed mb-10 text-sm">
-                                One hall that divides into three fully independent rooms, each with its own AV system. Certified 100&nbsp;Gbps fiber internet. Seven screens — wherever a guest sits, they have a screen. Dedicated day-of management. Plug and play, without the hotel price tag or the union surcharge.
-                            </p>
-
-                            <div class="mb-10">
-                                <div class="feature-chip">
-                                    <span class="chip-num">01</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Certified 100 Gbps Fiber Internet</div>
-                                        <div class="text-xs text-gray-400 font-light">Full upload & download. Included in corporate packages.</div>
-                                    </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">02</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">7 Screens — All 4K</div>
-                                        <div class="text-xs text-gray-400 font-light">Every seat has a sightline. Integrated AV system.</div>
-                                    </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">03</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Divides into 3 Independent Rooms</div>
-                                        <div class="text-xs text-gray-400 font-light">Separate entrances possible. Run two events simultaneously.</div>
-                                    </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">04</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Breakout & Meeting Rooms</div>
-                                        <div class="text-xs text-gray-400 font-light">Dedicated prep rooms. Committee offices available from morning.</div>
-                                    </div>
-                                </div>
-                                <div class="feature-chip">
-                                    <span class="chip-num">05</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Not Unionized — Total Flexibility</div>
-                                        <div class="text-xs text-gray-400 font-light">No charge for moving a table. No surprise line items.</div>
-                                    </div>
-                                </div>
-                                <div class="feature-chip" style="border-bottom:none">
-                                    <span class="chip-num">06</span>
-                                    <div>
-                                        <div class="text-sm font-normal mb-1">Mics, Speakers, Projectors — Included</div>
-                                        <div class="text-xs text-gray-400 font-light">Basic AV is package-inclusive. Plug & play from day one.</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <ul class="text-sm border-t border-gray-200 pt-6 space-y-3 font-light mb-10">
-                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Theatre Style</span><span>Up to 900 guests</span></li>
-                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Classroom / Rounds</span><span>Up to 750 guests</span></li>
-                                <li class="flex justify-between"><span class="text-[#8b7355] uppercase tracking-widest text-xs">Internet</span><span>100 Gbps certified fiber</span></li>
-                            </ul>
-
-                            <a href="#contact" class="cta-link">Plan Your Conference</a>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════
-             03  4 CONFIGURABLE HALLS (interactive list)
-        ════════════════════════════════════════════ -->
-        <section id="halls" class="py-40 px-8 lg:px-12 bg-[#f9f8f6] border-t border-gray-100">
-            <div class="grid-12 w-full">
-
-                <!-- Image Preview: cols 2–6 -->
-                <div class="col-start-2 col-span-5 relative h-[700px] overflow-hidden mask-reveal" id="halls-img-wrap">
-                    <div class="absolute inset-0 bg-gray-100"></div>
-                    <img src="./assets/regence.jpg"
-                         alt="Régence" class="hall-preview-img active" data-hall="regence">
-                    <img src="./assets/cartier.jpg"
-                         alt="Cartier" class="hall-preview-img" data-hall="cartier">
-                    <img src="./assets/mont-royal.jpg"
-                         alt="Mont-Royal" class="hall-preview-img" data-hall="mont-royal">
-                    <img src="./assets/plaza.jpg"
-                         alt="Grand Ballroom" class="hall-preview-img" data-hall="plaza">
-                </div>
-
-                <!-- Floating content box: cols 7–11 -->
-                <div class="col-start-7 col-span-5 z-20 flex flex-col justify-center">
-                    <div class="bg-[#fcfbf9] p-12 lg:p-16 border border-gray-100 shadow-2xl"
-                         style="margin-left:calc(-80px - 1.5rem); margin-top:60px">
                         
-                        <p class="text-xs tracking-widest uppercase text-gray-400 mb-6">03</p>
-                        <h2 class="font-cormorant text-5xl lg:text-6xl font-light mb-4" style="line-height:0.9">
-                            <span class="overflow-clip"><span class="slide-up hall-title">17 Halls.</span></span><br>
-                            <span class="overflow-clip"><span class="slide-up hall-title">4 Main</span></span><br>
-                            <span class="overflow-clip"><span class="slide-up hall-title text-[#8b7355]"><em>Configurations.</em></span></span>
-                        </h2>
-                        <p class="text-xs text-gray-400 font-light mb-12 leading-relaxed max-w-xs">
-                            Hover over each space to preview. Each hall can be arranged independently or opened into one grand floor.
-                        </p>
-
-                        <div class="flex flex-col w-full font-public text-2xl font-light">
-                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="regence">
-                                <div>
-                                    <span class="block">Régence</span>
-                                    <span class="text-xs text-gray-400 tracking-wide font-light">Up to 250 guests</span>
-                                </div>
-                                <span class="text-xs tracking-widest text-gray-300 font-normal">01</span>
-                            </div>
-                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="cartier">
-                                <div>
-                                    <span class="block">Cartier</span>
-                                    <span class="text-xs text-gray-400 tracking-wide font-light">Up to 200 guests</span>
-                                </div>
-                                <span class="text-xs tracking-widest text-gray-300 font-normal">02</span>
-                            </div>
-                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="mont-royal">
-                                <div>
-                                    <span class="block">Mont-Royal</span>
-                                    <span class="text-xs text-gray-400 tracking-wide font-light">Up to 100 guests</span>
-                                </div>
-                                <span class="text-xs tracking-widest text-gray-300 font-normal">03</span>
-                            </div>
-                            <div class="hall-item flex justify-between items-end fade-up-init" data-target="plaza" style="border-bottom:none">
-                                <div>
-                                    <span class="block">The Grand Ballroom</span>
-                                    <span class="text-xs text-gray-400 tracking-wide font-light">Full venue — up to 900 guests</span>
-                                </div>
-                                <span class="text-xs tracking-widest text-gray-300 font-normal">04</span>
+                        <!-- Smaller Image Corporate - REBALANCED -->
+                        <div class="relative h-[300px] bg-gray-100 group overflow-hidden mt-12 shadow-md">
+                            <img src="images/Plaza_Centre-Ville20_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Régence Corporate" class="absolute inset-0 w-full h-full object-cover object-top transition duration-700 group-hover:scale-105 img-editorial">
+                            <div class="absolute inset-0 overlay-corporate z-10"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-20"></div>
+                            <div class="absolute bottom-6 left-6 text-white z-10">
+                                <a href="regence.html" class="hover:underline text-lg font-bold tracking-tight">Régence Suite</a>
+                                <span class="text-[9px] uppercase font-bold tracking-[0.2em] opacity-80">250 Capacity</span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════
-             04  THE DIFFERENTIATORS (dark section)
-        ════════════════════════════════════════════ -->
-        <section class="py-40 px-8 lg:px-12 bg-[#0d0d0d] text-white">
-            <div class="grid-12 w-full">
-
-                <!-- Label -->
-                <div class="col-start-2 col-span-10 mb-20">
-                    <div class="flex items-center gap-6 mb-8">
-                        <span class="text-xs tracking-widest uppercase text-gray-600">04</span>
-                        <span class="flex-1" style="border-top:0.5px solid rgba(255,255,255,0.08)"></span>
-                        <span class="text-xs tracking-widest uppercase text-gray-600">Why Plaza Centre-Ville</span>
+            <!-- 5. "Originals" Block Variant - Corporate Execution (CONTRAST BREAK) -->
+            <section class="my-12 bg-[#1E1E1E] text-white overflow-hidden">
+                <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 relative">
+                    <!-- Left Image & Quote -->
+                    <div class="relative h-[600px]">
+                        <img src="images/unified_architects_corporate_authentic_1773677600387.png" alt="Corporate Execution" class="absolute inset-0 w-full h-full object-cover transition duration-700 hover:scale-105 img-editorial opacity-80">
+                        <div class="absolute inset-0 overlay-corporate z-10"></div>
+                        <div class="absolute inset-0 bg-black/50 z-20"></div>
+                        <div class="relative h-full flex flex-col justify-center p-12 md:p-20 z-10">
+                            <h2 class="text-3xl md:text-5xl h-bold leading-tight mb-4 drop-shadow-xl">
+                                Where grand scale <br>
+                                meets absolute precision.
+                            </h2>
+                        </div>
                     </div>
-                    <h2 class="font-cormorant text-5xl lg:text-6xl font-light" style="line-height:0.9">
-                        <span class="overflow-clip"><span class="slide-up diff-title">What you won't</span></span><br>
-                        <span class="overflow-clip"><span class="slide-up diff-title text-[#8b7355]"><em>find anywhere else.</em></span></span>
-                    </h2>
-                </div>
 
-                <!-- Stats row -->
-                <div class="col-start-2 col-span-10">
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-0">
-                        <div class="stat-item pr-8" style="border-right:0.5px solid rgba(255,255,255,0.08)">
-                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">10K</div>
-                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">sq ft</div>
-                            <div class="text-sm text-gray-400 font-light">Open floor. No pillars breaking your sight lines.</div>
-                        </div>
-                        <div class="stat-item px-8" style="border-right:0.5px solid rgba(255,255,255,0.08)">
-                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">18</div>
-                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">ft ceilings</div>
-                            <div class="text-sm text-gray-400 font-light">Grand scale impossible to replicate downtown.</div>
-                        </div>
-                        <div class="stat-item px-8" style="border-right:0.5px solid rgba(255,255,255,0.08)">
-                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">100</div>
-                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">Gbps fiber</div>
-                            <div class="text-sm text-gray-400 font-light">Certified. Included. Nobody else has this downtown.</div>
-                        </div>
-                        <div class="stat-item pl-8">
-                            <div class="font-cormorant text-6xl font-light text-[#8b7355] mb-2">$10</div>
-                            <div class="text-xs tracking-widest uppercase text-gray-500 mb-2">indoor parking</div>
-                            <div class="text-sm text-gray-400 font-light">Indoor. Downtown Montréal. Locked in the lease.</div>
+                    <!-- Right White Detail Card (The Collective) -->
+                    <div class="flex items-center justify-center p-6 lg:p-0">
+                        <div class="bg-white text-black p-12 w-full max-w-lg lg:-ml-12 relative z-20 shadow-2xl rounded-sm border border-black/10">
+                            <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-6">Event Infrastructure</p>
+                            <h3 class="text-3xl h-bold mb-8 leading-tight">
+                                Flexible by <br>Design.
+                            </h3>
+                            <p class="text-gray-600 mb-8 leading-relaxed">
+                                Plaza Centre-Ville is built to handle the complexity of modern business events. With 10,000 sq. ft. of flexible space and soundproof air-walls that partition the hall in minutes, we provide a seamless environment for everything from board meetings to large-scale conventions.
+                            </p>
+                            <div class="border-t border-gray-100 pt-6 mt-6">
+                                <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Connectivity</p>
+                                <p class="text-sm font-semibold">100 Gbps Fiber Internet Certified & Dedicated AV Support on-site.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Separator -->
-                <div class="col-start-2 col-span-10 my-20" style="border-top:0.5px solid rgba(255,255,255,0.08)"></div>
+            <!-- DESIGN HOTELS INSPIRED BUSINESS INSIGHTS (BALANCED) -->
+            <section class="max-w-[1400px] mx-auto px-6 py-32 bg-[#fafafa]">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
+                    <!-- Left Column: Business Feed -->
+                    <div class="flex flex-col">
+                        <h2 class="text-4xl h-bold mb-4">What Corporate Clients Get</h2>
+                        <div class="flex gap-8 mb-16 text-xs font-bold uppercase tracking-widest border-b border-gray-200 pb-4">
+                            <span class="text-black border-b-2 border-black pb-4 -mb-[18px]">Packages</span>
+                            <span class="text-gray-400 cursor-pointer hover:text-black transition">Access</span>
+                            <span class="text-gray-400 cursor-pointer hover:text-black transition">AV</span>
+                        </div>
 
-                <!-- Hotel independence note -->
-                <div class="col-start-2 col-span-5">
-                    <h3 class="font-cormorant text-3xl font-light mb-6 text-white" style="line-height:1.1">
-                        Stay at the Intercontinental.<br>
-                        <em class="text-[#8b7355]">Use your points. Host here.</em>
-                    </h3>
-                    <p class="text-gray-400 font-light text-sm leading-relaxed">
-                        We are not a hotel. Your guests are never obligated to book a single room with us. Corporate clients affiliated with IHG, Marriott, or any other brand can accumulate their points at the hotel of their choice—and still hold their conference here. Maximum savings. Zero compromise.
-                    </p>
-                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 flex-grow">
+                            <!-- Detail 1 -->
+                            <div class="group cursor-pointer flex flex-col">
+                                <div class="aspect-square overflow-hidden mb-6">
+                                    <img src="images/unified_insight_1_authentic_1773677659008.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                                </div>
+                                <span class="text-[10px] uppercase font-bold text-gray-400">Logistics</span>
+                                <h4 class="text-xl h-bold mt-2 group-hover:underline">All-In Pricing. No Surprises.</h4>
+                                <p class="text-sm text-gray-600 mt-4 leading-relaxed">All-inclusive day rates featuring AM coffee, working lunch, PM break, and full tech-support—no hidden rentals.</p>
+                            </div>
 
-                <div class="col-start-7 col-span-5">
-                    <h3 class="font-cormorant text-3xl font-light mb-6 text-white" style="line-height:1.1">
-                        No union. No surprise<br>
-                        <em class="text-[#8b7355]">line items. Ever.</em>
-                    </h3>
-                    <p class="text-gray-400 font-light text-sm leading-relaxed">
-                        Move a table? Fine. Want a different chair? Done. At a unionized hotel venue, every request becomes an invoice. Here, we roll up our sleeves—the owners are on-site—and what we say is included, is included. That's why clients who came once haven't left.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════
-             05  UNDERGROUND CONNECTION — RESO Map
-        ════════════════════════════════════════════ -->
-        <section class="py-40 px-8 lg:px-12 bg-[#0a0a0a] text-white border-t border-white/5">
-            <div class="grid-12 w-full items-center">
-
-                <!-- Text -->
-                <div class="col-start-2 col-span-4 z-10">
-                    <p class="text-xs tracking-widest uppercase text-gray-600 mb-8">05 / Location</p>
-                    <h2 class="font-cormorant text-5xl lg:text-6xl font-light mb-10" style="line-height:0.9">
-                        <span class="overflow-clip"><span class="slide-up map-title">Underground</span></span><br>
-                        <span class="overflow-clip"><span class="slide-up map-title text-[#8b7355]"><em>Connection.</em></span></span>
-                    </h2>
-                    <div class="overflow-clip mb-10">
-                        <p class="text-gray-400 font-light text-sm leading-relaxed slide-up map-title">
-                            Tied to Metro Bonaventure via the RESO underground network. Guests arrive sheltered from the elements — no coat-check scramble in February. $10 indoor parking, deal signed into our lease, unchanged.
-                        </p>
+                            <!-- Detail 2 -->
+                            <div class="group cursor-pointer flex flex-col">
+                                <div class="aspect-square overflow-hidden mb-6 relative">
+                                    <img src="images/unified_insight_2_authentic_1773677675439.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                                    <div class="absolute inset-0 overlay-corporate"></div>
+                                </div>
+                                <span class="text-[10px] uppercase font-bold text-gray-400">Flexibility</span>
+                                <h4 class="text-xl h-bold mt-2 group-hover:underline">Three Independent Rooms</h4>
+                                <p class="text-sm text-gray-600 mt-4 leading-relaxed">Swift transitions from keynote to breakout sessions with our soundproof modular wall system and independent climate controls.</p>
+                            </div>
+                        </div>
                     </div>
-                    <ul class="space-y-3 text-sm font-light">
-                        <li class="flex justify-between border-b border-white/8 pb-3">
-                            <span class="text-[#8b7355] uppercase tracking-widest text-xs">Metro</span>
-                            <span class="text-gray-400">Bonaventure — 3 min walk</span>
-                        </li>
-                        <li class="flex justify-between border-b border-white/8 pb-3">
-                            <span class="text-[#8b7355] uppercase tracking-widest text-xs">RESO Access</span>
-                            <span class="text-gray-400">Full underground city link</span>
-                        </li>
-                        <li class="flex justify-between pb-3">
-                            <span class="text-[#8b7355] uppercase tracking-widest text-xs">Parking</span>
-                            <span class="text-gray-400">$10 / day, indoor & connected</span>
-                        </li>
-                    </ul>
-                </div>
 
-                <!-- Map SVG -->
-                <div class="col-start-7 col-span-5 h-[560px] flex items-center justify-center bg-[#111] p-12 relative overflow-hidden">
-                    <svg viewBox="0 0 500 500" class="w-full h-full" style="stroke-width:0.5px; fill:none; stroke:currentColor">
-                        <!-- Building outline -->
-                        <rect x="210" y="90" width="140" height="180" class="map-building" style="stroke:#fff; stroke-width:0.8px"/>
-                        <!-- Metro line -->
-                        <path d="M 40 430 L 150 430 L 280 300 L 280 270" class="map-line" style="stroke:#fff"/>
-                        <!-- RESO connector -->
-                        <path d="M 280 270 L 280 250 L 280 180" class="map-line" style="stroke:rgba(139,115,85,0.6); stroke-dasharray:5 6"/>
-                        <!-- Nodes -->
-                        <circle cx="150" cy="430" r="4" style="fill:transparent; stroke:#fff"/>
-                        <circle cx="280" cy="300" r="4" style="fill:transparent; stroke:#fff"/>
-                        <circle cx="280" cy="270" r="7" class="map-node" style="fill:#fff; stroke:#fff"/>
-                        <!-- Labels -->
-                        <text x="280" y="68"  style="fill:#fff; stroke:none; font-size:9px; font-family:'Public Sans'; letter-spacing:0.12em; text-anchor:middle" class="map-text">PLAZA CENTRE-VILLE</text>
-                        <text x="120" y="455" style="fill:#666; stroke:none; font-size:10px; font-family:'Public Sans'" class="map-text">Métro Bonaventure</text>
-                        <text x="220" y="320" style="fill:#666; stroke:none; font-size:10px; font-family:'Public Sans'" class="map-text">RESO</text>
-                        <text x="335" y="185" style="fill:rgba(139,115,85,0.7); stroke:none; font-size:9px; font-family:'Public Sans'; letter-spacing:0.08em" class="map-text">$10 Parking</text>
-                    </svg>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════
-             06  SOCIAL PROOF / TESTIMONIALS
-        ════════════════════════════════════════════ -->
-        <section class="py-40 px-8 lg:px-12 bg-[#fcfbf9] border-t border-gray-100">
-            <div class="grid-12 w-full">
-
-                <div class="col-start-2 col-span-10 mb-16">
-                    <div class="flex items-center gap-6 mb-4">
-                        <span class="text-xs tracking-widest uppercase text-gray-400">06</span>
-                        <span class="flex-1 thin-rule"></span>
-                        <span class="text-xs tracking-widest uppercase text-gray-400">From Our Clients</span>
+                    <!-- Right Column: Featured Feature -->
+                    <div class="relative h-full">
+                        <div class="sticky top-32 h-full min-h-[600px] group overflow-hidden shadow-2xl">
+                            <img src="images/unified_insight_3_authentic_1773677691749.png" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 img-editorial">
+                            <div class="absolute inset-0 overlay-corporate z-10"></div>
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition duration-500 z-20"></div>
+                            <div class="absolute bottom-12 left-12 right-12 text-white bg-white/10 backdrop-blur-md p-8 border border-white/20">
+                                <a href="regence.html" class="hover:underline text-2xl h-bold mb-4">The Grand Ballroom — Corporate Setup</a>
+                                <p class="text-sm border-t border-white/30 pt-4 cursor-pointer hover:tracking-widest transition-all uppercase font-bold">Inquire for Corporate Rates</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Testimonial 1 -->
-                <div class="col-start-2 col-span-4 fade-up-init testimonial-item">
-                    <div class="testimonial-mark mb-4">&ldquo;</div>
-                    <p class="font-cormorant text-2xl font-light italic leading-tight mb-6">
-                        When they came, they weren't leaving. The flexibility here is something you simply don't get at a hotel.
-                    </p>
-                    <p class="text-xs tracking-widest uppercase text-gray-400">— Irish Man of the Year Gala, 10-year client</p>
+            <!-- CORPORATE HUB CONNECTION MAP -->
+            <section class="max-w-[1400px] mx-auto px-6 py-24 mb-24 border-t border-gray-200">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-4">
+                        <h2 class="text-4xl h-bold mb-6">Strategic Location</h2>
+                        <p class="text-gray-600 mb-8">Located at 777 boul. Robert-Bourassa, Montréal, QC H3A 0B1 — the exact center of Montreal's financial district. Direct indoor access to the RESO connects your delegates to 1,000+ businesses and the airport express bus in under 2 minutes walking. Connected to the underground RESO network via Bonaventure Métro — guests arrive indoors year-round.</p>
+                        <ul class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-8 space-y-2">
+                            <li class="flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> No hotel affiliation — guests stay where they earn points (IHG, Marriott, Fairmont)</li>
+                            <li class="flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> No room minimums. No obligations.</li>
+                        </ul>
+                        <a href="#" class="btn-outline">Download Access Guide</a>
+                    </div>
+                    <div class="lg:col-span-8 relative h-[600px] bg-gray-100 overflow-hidden shadow-inner border border-gray-100">
+                        <!-- Custom Architectural Map -->
+                        <img src="images/montreal_architectural_map_1773667503106.png" class="absolute inset-0 w-full h-full object-cover transition duration-1000">
+                        <div class="absolute inset-0 bg-white/5 pointer-events-none"></div>
+
+                        <!-- Map Marker Dots (Design Hotels style) -->
+                        <div class="absolute top-[67%] left-[54%] w-4 h-4 bg-[#3A3F47] rounded-full animate-ping"></div>
+                        <div class="absolute top-[67%] left-[54%] w-4 h-4 bg-[#3A3F47] rounded-full border-4 border-white shadow-xl"></div>
+                        
+                        <div class="absolute bottom-8 right-8 bg-white/95 backdrop-blur-sm p-6 shadow-2xl border border-gray-100 text-[10px] font-bold uppercase tracking-[0.2em] text-[#3A3F47]">
+                            <p>Global Transit Node: Bonaventure</p>
+                            <p class="text-gray-400 mt-2 font-medium text-[9px]">Underground Access: 0.0 KM</p>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Testimonial 2 -->
-                <div class="col-start-7 col-span-4 fade-up-init testimonial-item" style="transition-delay:0.15s">
-                    <div class="testimonial-mark mb-4">&ldquo;</div>
-                    <p class="font-cormorant text-2xl font-light italic leading-tight mb-6">
-                        We do Les Affaires twice a week. The owners are there. The setup changes to what we need. That's unique.
-                    </p>
-                    <p class="text-xs tracking-widest uppercase text-gray-400">— Recurring Corporate Client</p>
                 </div>
+            </section>
+        </div>
 
-                <!-- CTA within testimonial section -->
-                <div class="col-start-2 col-span-10 mt-20">
-                    <hr class="thin-rule mb-12">
-                    <p class="font-cormorant text-xl font-light text-gray-500 italic max-w-xl">
-                        "The biggest obstacle for us is to be known. When they come, they are not leaving."
-                    </p>
-                    <p class="text-xs text-gray-400 mt-2">— Founder, Plaza Centre-Ville</p>
+
+        <!-- ==============================================
+             SOCIAL / WEDDINGS VIEW
+        ================================================ -->
+        <div id="view-social" class="w-full hidden transition-opacity duration-500 opacity-0 pointer-events-none">
+            <div class="max-w-[1400px] mx-auto px-6 pt-32 pb-12">
+                <div class="border-t border-gray-100 pt-16">
+                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-[#B58B5D] block mb-4">The Experience</span>
+                    <h2 class="text-4xl md:text-5xl h-bold">Social & Weddings</h2>
                 </div>
-
             </div>
-        </section>
+            <!-- 3. Signature Space Social Block -->
+            <section class="max-w-full">
+                <div class="max-w-[1400px] mx-auto px-6 py-24">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                    
+                    <!-- Left Large Block - WEDDING IMAGE - REBALANCED -->
+                    <div class="lg:col-span-8 flex flex-col justify-end relative min-h-[600px] bg-gray-100 group overflow-hidden">
+                        <img src="images/unified_social_gathering_authentic_1773677500394.png" alt="Wedding Setup Grand Ballroom" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                        <div class="absolute inset-0 overlay-social z-10"></div>
+                        <!-- Top Gradient for Label Visibility -->
+                        <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/50 to-transparent z-20 pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-20"></div>
+                        <div class="absolute top-8 left-8 text-white z-30 drop-shadow-lg">
+                            <span class="text-xs uppercase tracking-widest font-bold block mb-2">The Gathering</span>
+                        </div>
+                        <div class="relative z-30 p-8 text-white">
+                            <a href="regence.html" class="hover:underline text-4xl h-bold mb-2 drop-shadow-lg">The Grand Ballroom (Weddings)</a>
+                            <p class="text-sm font-medium drop-shadow-md">700 seated (with dance floor) | Breathtaking 18ft Ceilings.</p>
+                        </div>
+                    </div>
 
-        <!-- ═══════════════════════════════════════════
-             07  PHOTO GALLERY STRIP
-        ════════════════════════════════════════════ -->
-        <section class="py-0 overflow-hidden">
-            <div class="flex" id="gallery-strip">
-                <img src="./images/DSC05368_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                     class="h-[40vh] w-auto flex-none object-cover" alt="">
-                <img src="./images/293627666_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                     class="h-[40vh] w-auto flex-none object-cover" alt="">
-                <img src="./images/2_1_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                     class="h-[40vh] w-auto flex-none object-cover" alt="">
-                <img src="./images/DSC05378_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                     class="h-[40vh] w-auto flex-none object-cover" alt="">
-                <img src="./images/B_S-2193_resize_42bf47b0f9fbd735616adfa1279cce1a.JPG"
-                     class="h-[40vh] w-auto flex-none object-cover" alt="">
-                <img src="./images/304552385_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg"
-                     class="h-[40vh] w-auto flex-none object-cover" alt="">
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════
-             08  CONTACT / CTA
-        ════════════════════════════════════════════ -->
-        <section id="contact" class="py-40 px-8 lg:px-12 bg-[#fcfbf9] border-t border-gray-100">
-            <div class="grid-12 w-full">
-
-                <div class="col-start-2 col-span-4">
-                    <p class="text-xs tracking-widest uppercase text-gray-400 mb-6">08 / Contact</p>
-                    <h2 class="font-cormorant text-5xl font-light mb-8" style="line-height:0.9">
-                        Let's build<br>
-                        <em class="text-[#8b7355]">your event.</em>
-                    </h2>
-                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-10">
-                        We respond to every inquiry. For large corporate bookings, we can arrange an in-person walkthrough the same week.
-                    </p>
-                    <ul class="space-y-4 text-sm font-light">
-                        <li class="flex gap-4">
-                            <span class="text-[#8b7355] uppercase tracking-widest text-xs w-16 flex-none pt-0.5">Address</span>
-                            <span class="text-gray-600">777 Robert-Bourassa Blvd,<br>Montréal, QC H3C 3Z7</span>
-                        </li>
-                        <li class="flex gap-4">
-                            <span class="text-[#8b7355] uppercase tracking-widest text-xs w-16 flex-none pt-0.5">Instagram</span>
-                            <a href="https://www.instagram.com/plaza_centre_ville/" target="_blank" class="text-gray-600 hover:text-[#8b7355] transition-colors">@plaza_centre_ville</a>
-                        </li>
-                        <li class="flex gap-4">
-                            <span class="text-[#8b7355] uppercase tracking-widest text-xs w-16 flex-none pt-0.5">Network</span>
-                            <span class="text-gray-600">Part of PMG · 15 venues across Greater Montréal</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Contact form -->
-                <div class="col-start-7 col-span-5">
-                    <form class="space-y-8">
-                        <div class="grid grid-cols-2 gap-6">
+                    <!-- Right Column Text + Smaller Image -->
+                    <div class="lg:col-span-4 flex flex-col justify-between h-full gap-8">
+                        <div class="bg-transparent flex flex-col justify-center">
+                            <h3 class="text-sm uppercase tracking-widest font-semibold text-[#B58C6B] mb-6 border-b border-gray-200 pb-2">Your Vision</h3>
+                            <p class="text-lg font-medium leading-relaxed mb-6">
+                                Everything bends to your vision. Chiavari chairs available in multiple finishes, ground-up uplighting tailored to your palette, and dedicated areas for live bands.
+                            </p>
                             <div>
-                                <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">First Name</label>
-                                <input type="text" placeholder="Marie" class="form-input">
+                                <a href="#" class="btn-outline">Inquire for Dates</a>
                             </div>
-                            <div>
-                                <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Last Name</label>
-                                <input type="text" placeholder="Dupont" class="form-input">
+                            <!-- Social Amenities - ICON GRID (FIX 1) -->
+                            <div class="mt-8 border-t border-gray-200 pt-6">
+                                <h4 class="text-[10px] uppercase tracking-widest font-bold text-[#B58C6B] mb-6">Social & Wedding Amenities</h4>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="flex items-center gap-3 p-3 bg-[#F5F0E8]/30 border border-[#F5F0E8] rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#B58C6B]"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Ceremony Space</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-[#F5F0E8]/30 border border-[#F5F0E8] rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#B58C6B]"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Bridal suite</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-[#F5F0E8]/30 border border-[#F5F0E8] rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#B58C6B]"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Photoshoots</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-[#F5F0E8]/30 border border-[#F5F0E8] rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#B58C6B]"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Linens & Decor</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-[#F5F0E8]/30 border border-[#F5F0E8] rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#B58C6B]"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Event Coordinator</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-[#F5F0E8]/30 border border-[#F5F0E8] rounded-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#B58C6B]"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+                                        <span class="text-[10px] uppercase tracking-wide font-bold">Cocktail area</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <!-- Smaller Image Social - REBALANCED -->
+                        <div class="relative h-[300px] bg-gray-100 group overflow-hidden mt-12 shadow-md">
+                            <img src="images/IMG_0006_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" alt="Régence Social" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                            <div class="absolute inset-0 overlay-social z-10"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-20"></div>
+                            <div class="absolute bottom-6 left-6 text-white z-10">
+                                <h4 class="text-lg font-bold tracking-tight">Régence Suite Intimate</h4>
+                                <span class="text-[9px] uppercase font-bold tracking-[0.2em] opacity-80">100-250 Guests</span>
                             </div>
                         </div>
-                        <div>
-                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Email</label>
-                            <input type="email" placeholder="marie@company.com" class="form-input">
-                        </div>
-                        <div>
-                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Event Type</label>
-                            <select class="form-input text-gray-500">
-                                <option value="" disabled selected>Select event type</option>
-                                <option>Wedding</option>
-                                <option>Gala / Social</option>
-                                <option>Corporate Conference</option>
-                                <option>Trade Show</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Approximate Guest Count</label>
-                            <input type="text" placeholder="e.g. 350" class="form-input">
-                        </div>
-                        <div>
-                            <label class="text-xs tracking-widest uppercase text-gray-400 block mb-2">Message</label>
-                            <textarea rows="3" placeholder="Date, vision, questions…" class="form-input resize-none" style="padding-bottom:1rem"></textarea>
-                        </div>
-                        <button type="submit"
-                                class="w-full bg-[#1a1a1a] text-white py-4 text-xs tracking-widest uppercase hover:bg-[#8b7355] transition-colors duration-300">
-                            Send Inquiry
-                        </button>
-                    </form>
+                    </div>
                 </div>
+            </section>
 
-            </div>
-        </section>
+            <!-- 5. "Originals" Block Variant - Social Promise (CONTRAST BREAK) -->
+            <section class="my-12 bg-[#1E1E1E] text-white overflow-hidden">
+                <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 relative">
+                    <!-- Left Image & Quote -->
+                    <div class="relative h-[600px]">
+                        <img src="images/unified_architects_social_authentic_1773677617877.png" alt="Wedding Quote" class="absolute inset-0 w-full h-full object-cover transition duration-700 hover:scale-105 img-editorial opacity-80">
+                        <div class="absolute inset-0 overlay-social z-10"></div>
+                        <div class="absolute inset-0 bg-black/50 z-20"></div>
+                        <div class="relative h-full flex flex-col justify-center p-12 md:p-20 z-30 text-white">
+                            <h2 class="text-3xl md:text-5xl h-bold leading-tight mb-4 drop-shadow-xl">
+                                Intimate at scale.<br>
+                                An orchestration of heritage <br>and modern elegance.
+                            </h2>
+                        </div>
+                    </div>
 
+                    <!-- Right Stone Detail Card (The Collective) -->
+                    <div class="flex items-center justify-center p-6 lg:p-0">
+                        <div class="bg-white p-12 w-full max-w-lg lg:-ml-12 relative z-20 shadow-2xl rounded-sm border border-black/10 text-black">
+                            <p class="text-[10px] uppercase tracking-widest font-bold text-[#B58C6B] mb-6">The Collective</p>
+                            <h3 class="text-3xl h-bold mb-8 leading-tight">
+                                Architects of <br>Atmosphere.
+                            </h3>
+                            <p class="text-gray-600 mb-8 leading-relaxed">
+                                Our team doesn't just manage bookings; we curate emotions. From the executive chef tailoring a menu to your heritage, to the on-site owner ensuring every linen is taut—we are a collection of specialists rooted in precision.
+                            </p>
+                            <div class="border-t border-gray-100 pt-6 mt-6">
+                                <p class="text-[10px] uppercase tracking-widest font-bold text-[#B58C6B] mb-2">Aesthetics</p>
+                                <p class="text-sm font-semibold">Chiavari chairs & full color architectural uplighting included in every signature package.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VENUE INSIGHTS SECTION (BALANCED) -->
+            <section class="max-w-[1400px] mx-auto px-6 py-32 bg-[#fafafa]">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
+                    <!-- Left Column: Venue Feed -->
+                    <div class="flex flex-col">
+                        <h2 class="text-4xl h-bold mb-4">Venue Insights</h2>
+                        <div class="flex gap-8 mb-16 text-xs font-bold uppercase tracking-widest border-b border-gray-200 pb-4">
+                            <span class="text-black border-b-2 border-black pb-4 -mb-[18px]">Spaces</span>
+                            <span class="text-gray-400 cursor-pointer hover:text-black transition">Logistics</span>
+                            <span class="text-gray-400 cursor-pointer hover:text-black transition">Atmosphere</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 flex-grow">
+                            <!-- Detail 1 -->
+                            <div class="group cursor-pointer flex flex-col">
+                                <div class="aspect-square overflow-hidden mb-6 relative">
+                                    <img src="images/306109327_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                                    <div class="absolute inset-0 overlay-social opacity-10"></div>
+                                </div>
+                                <span class="text-[10px] uppercase font-bold text-gray-400">Architecture</span>
+                                <h4 class="text-xl h-bold mt-2 group-hover:underline">The Golden Hour: Natural Lighting</h4>
+                                <p class="text-sm text-gray-600 mt-4 leading-relaxed">Our 18ft ceilings and floor-to-ceiling windows catch the Montreal sunset, transforming your event space into a natural masterpiece.</p>
+                            </div>
+
+                            <!-- Detail 2 -->
+                            <div class="group cursor-pointer flex flex-col">
+                                <div class="aspect-square overflow-hidden mb-6 relative">
+                                    <img src="images/792756790_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                                    <div class="absolute inset-0 overlay-social opacity-10"></div>
+                                </div>
+                                <span class="text-[10px] uppercase font-bold text-gray-400">Infrastructure</span>
+                                <h4 class="text-xl h-bold mt-2 group-hover:underline">The RESO Connection Portal</h4>
+                                <p class="text-sm text-gray-600 mt-4 leading-relaxed">Direct indoor portal access for 400+ guests through the underground network—why the city's largest transition point is the venue's best friend.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Featured Feature -->
+                    <div class="relative h-full">
+                        <div class="sticky top-32 h-full min-h-[600px] group overflow-hidden shadow-2xl">
+                            <img src="images/a60ea7d2_resize_42bf47b0f9fbd735616adfa1279cce1a.jpeg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition duration-500"></div>
+                            <div class="absolute bottom-12 left-12 right-12 text-white bg-white/10 backdrop-blur-md p-8 border border-white/20">
+                                <h3 class="text-2xl h-bold mb-4">Explore Venue Details</h3>
+                                <p class="text-sm border-t border-white/30 pt-4 cursor-pointer hover:tracking-widest transition-all uppercase font-bold">Download technical Floorplans</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Popular Destinations Layout -> Dining Formats (Expanded to 6 options) -->
+            <section class="max-w-[1400px] mx-auto px-6 py-24 mb-12 border-t border-gray-200">
+                <h2 class="text-3xl h-bold mb-12">Dining Experience</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-16">
+                    <!-- Row 1 -->
+                    <div class="group cursor-pointer">
+                        <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                            <img src="images/DSC05356_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                            <div class="absolute inset-0 overlay-social"></div>
+                        </div>
+                        <h4 class="font-bold text-lg leading-tight">Plated Service</h4>
+                        <p class="text-sm text-gray-600 mt-2">Savor elegance with meticulously crafted meals, artfully presented to delight the senses and elevate your celebration.</p>
+                    </div>
+                    <div class="group cursor-pointer">
+                        <div class="aspect-[3/4] overflow-hidden mb-6 relative bg-gray-100">
+                            <img src="images/DSC05366_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                            <div class="absolute inset-0 overlay-social"></div>
+                        </div>
+                        <h4 class="font-bold text-lg leading-tight">Interactive Stations</h4>
+                        <p class="text-sm text-gray-600 mt-2">Personalize your dining experience with a variety of small delights, adding a personalized touch to your celebration.</p>
+                    </div>
+                    <div class="group cursor-pointer">
+                        <div class="aspect-[3/4] overflow-hidden mb-6 relative bg-gray-100">
+                             <img src="images/DSC05368_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                             <div class="absolute inset-0 overlay-social"></div>
+                        </div>
+                        <h4 class="font-bold text-lg leading-tight">Buffet-style Dining</h4>
+                        <p class="text-sm text-gray-600 mt-2">Delight in the abundance with a diverse array of dishes, allowing guests to indulge in their favorites.</p>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="group cursor-pointer">
+                        <div class="aspect-[3/4] overflow-hidden mb-6 relative bg-gray-100">
+                            <img src="images/DSC05374_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                            <div class="absolute inset-0 overlay-social"></div>
+                        </div>
+                        <h4 class="font-bold text-lg leading-tight">Cocktail Reception</h4>
+                        <p class="text-sm text-gray-600 mt-2">In a lively atmosphere, enjoy delicious cocktails and a selection of small bites throughout the evening.</p>
+                    </div>
+                    <div class="group cursor-pointer">
+                        <div class="aspect-[3/4] overflow-hidden mb-6 relative bg-gray-100">
+                            <img src="images/DSC05378_resize_42bf47b0f9fbd735616adfa1279cce1a.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                            <div class="absolute inset-0 overlay-social"></div>
+                        </div>
+                        <h4 class="font-bold text-lg leading-tight">Gourmet Canapés</h4>
+                        <p class="text-sm text-gray-600 mt-2">The perfect prelude, our canapés offer a moment of indulgence and anticipation, ensuring that the festivities start on a high note.</p>
+                    </div>
+                    <div class="group cursor-pointer">
+                        <div class="aspect-[3/4] overflow-hidden mb-6 relative bg-gray-100">
+                            <img src="images/B_S-2193_resize_42bf47b0f9fbd735616adfa1279cce1a.JPG" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 img-editorial">
+                            <div class="absolute inset-0 overlay-social"></div>
+                        </div>
+                        <h4 class="font-bold text-lg leading-tight">Family-style Service</h4>
+                        <p class="text-sm text-gray-600 mt-2">This communal feast allows guests to bond over the joy of food, making the meal a cherished moment.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DESIGN HOTELS INSPIRED MAP SECTION -->
+            <section class="max-w-[1400px] mx-auto px-6 py-24 mb-24 border-t border-gray-200">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-4">
+                        <h2 class="text-4xl h-bold mb-6 tracking-tight">Explore the <br>Connection.</h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">Located at 777 boul. Robert-Bourassa, Montréal, QC H3A 0B1, Plaza Centre-Ville sits at the epicenter of Montreal's Underground City (RESO). 33km of corridors connecting you to over 7,000 hotel rooms, 10 metro stations, and 2 major train hubs—completely outdoors-free. Connected to the underground RESO network via Bonaventure Métro — guests arrive indoors year-round.</p>
+                        <ul class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-8 space-y-2 text-[#B58C6B]">
+                            <li class="flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> No hotel affiliation — guests stay where they earn points</li>
+                            <li class="flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> No room minimums. No obligations.</li>
+                        </ul>
+                        <a href="#" class="btn-outline">View Transit Hubs</a>
+                    </div>
+                    <div class="lg:col-span-8 relative h-[600px] bg-gray-50 overflow-hidden shadow-inner border border-gray-100">
+                        <!-- Custom Architectural Map -->
+                        <img src="images/montreal_architectural_map_1773667503106.png" class="absolute inset-0 w-full h-full object-cover transition duration-1000">
+                        <div class="absolute inset-0 bg-white/5 pointer-events-none"></div>
+
+                        <!-- Map Marker Dots (Design Hotels style) -->
+                        <div class="absolute top-[67%] left-[54%] w-4 h-4 bg-black rounded-full animate-ping"></div>
+                        <div class="absolute top-[67%] left-[54%] w-4 h-4 bg-black rounded-full border-4 border-white shadow-lg"></div>
+                        
+                        <div class="absolute bottom-8 right-8 bg-white/95 backdrop-blur-sm p-6 shadow-2xl border border-gray-100 text-[10px] font-bold uppercase tracking-[0.2em]">
+                            <p>Direct Portal: Bonaventure</p>
+                            <p class="text-gray-400 mt-2 font-medium text-[9px]">0.0 KM to Transit</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+
+        </div> <!-- End Social View -->
+
+    </div> <!-- End Main Content Container -->
     </main>
 
-    <!-- FOOTER -->
-    <footer class="ml-[60px] py-16 px-8 lg:px-12 bg-[#0a0a0a] text-white border-t border-white/5">
-        <div class="grid-12 w-full">
-            <div class="col-start-2 col-span-3">
-                <p class="text-xs tracking-widest uppercase text-gray-600 mb-4">Plaza Centre-Ville</p>
-                <p class="text-gray-600 text-xs font-light leading-relaxed">
-                    Part of the PMG Group — <br>a network of 15 Montreal event venues.
+    <!-- CLIENT TESTIMONIAL SECTION -->
+    <section id="client-testimonial" class="w-full bg-[#1A1A1A] py-24 text-white overflow-hidden">
+        <div class="max-w-[1400px] mx-auto px-6 flex flex-col items-center text-center">
+            <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-gray-500 mb-8">CLIENT STORY</span>
+            <h2 class="text-4xl md:text-6xl h-bold mb-8 leading-tight max-w-4xl">
+                "They handle everything. The owners are actually there."
+            </h2>
+            <div class="max-w-2xl">
+                <p class="text-lg md:text-xl text-gray-400 font-light leading-relaxed mb-12">
+                    We've hosted our annual gala here for over a decade. What sets Plaza apart isn't just the space — it's the people. The owners are genuinely invested in making your event perfect. No corporate distance. No "let me check with management." They're on the floor, solving problems, making sure everything lands exactly right.
                 </p>
+                <div class="flex flex-col items-center">
+                    <div class="h-12 w-px bg-white/20 mb-6"></div>
+                    <p class="text-xs uppercase tracking-widest font-bold">Event Director, Premier Montreal Gala</p>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">10+ Years, Plaza Centre-Ville</p>
+                </div>
             </div>
-            <div class="col-start-5 col-span-2">
-                <p class="text-xs tracking-widest uppercase text-gray-700 mb-4">Navigate</p>
-                <ul class="space-y-2 text-xs text-gray-500 font-light">
-                    <li><a href="#experience" class="hover:text-[#8b7355]">Social & Weddings</a></li>
-                    <li><a href="#experience" class="hover:text-[#8b7355]">Corporate</a></li>
-                    <li><a href="#halls" class="hover:text-[#8b7355]">The Halls</a></li>
-                    <li><a href="#contact" class="hover:text-[#8b7355]">Contact</a></li>
-                </ul>
+        </div>
+    </section>
+
+    <!-- 7. Universal Footer -->
+    <footer id="footer" class="border-t border-gray-200 bg-white z-10 relative">
+        <div class="max-w-[1400px] mx-auto px-6 py-20 text-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 text-gray-600">
+                <!-- Brand Column -->
+                <div class="lg:border-r border-gray-200 pb-8 lg:pb-0 lg:pr-8">
+                    <h4 class="text-xl h-bold text-black mb-4">Plaza Centre-Ville</h4>
+                    <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-black">A PMG Group Venue.</p>
+                    <p class="leading-relaxed">
+                        Event Venue Since 2018.<br>
+                        Redefining hospitality.
+                    </p>
+                    <div class="mt-8">
+                        <a href="#" class="btn-outline">Contact Us</a>
+                    </div>
+                </div>
+                
+                <!-- Links Column -->
+                <div class="flex flex-col gap-3">
+                    <span class="font-bold text-black mb-2 uppercase tracking-widest text-[10px]">Resources</span>
+                    <a href="#" class="hover:text-black transition-colors">Corporate Events</a>
+                    <a href="#" class="hover:text-black transition-colors">Social & Weddings</a>
+                    <a href="#" class="hover:text-black transition-colors">Virtual Tour</a>
+                    <a href="#" class="hover:text-black transition-colors">Configurations</a>
+                </div>
+                
+                <!-- Address Column -->
+                <div class="flex flex-col gap-3">
+                    <span class="font-bold text-black mb-2 uppercase tracking-widest text-[10px]">Location</span>
+                    <p class="leading-relaxed">777 boul. Robert-Bourassa<br>H3A 0B1, Montréal, QC</p>
+                    <div class="mt-2">
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-black mb-1">Metro Bonaventure</p>
+                        <p class="text-gray-500 italic">Direct RESO access.</p>
+                    </div>
+                </div>
+
+                <!-- Follow / Join Column -->
+                <div class="flex flex-col gap-3">
+                    <span class="font-bold text-black mb-2 uppercase tracking-widest text-[10px]">Connect</span>
+                    <p class="leading-relaxed">A handpicked selection of hospitality experiences.</p>
+                    <div class="flex gap-3 mt-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-black hover:bg-black hover:text-white transition-all text-[10px] font-bold">IG</a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-black hover:bg-black hover:text-white transition-all text-[10px] font-bold">FB</a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-black hover:bg-black hover:text-white transition-all text-[10px] font-bold">IN</a>
+                    </div>
+                </div>
             </div>
-            <div class="col-start-7 col-span-2">
-                <p class="text-xs tracking-widest uppercase text-gray-700 mb-4">PMG Venues</p>
-                <a href="https://plazapmg.com/our-venues/" target="_blank"
-                   class="text-xs text-gray-500 font-light hover:text-[#8b7355]">View all 15 locations →</a>
-            </div>
-            <div class="col-start-10 col-span-3 text-right">
-                <p class="text-gray-700 text-xs font-light">© 2025 Plaza Centre-Ville / PMG Group</p>
+            
+            <div class="mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-400 font-semibold tracking-widest">
+                <span>© 2026 PLAZA CENTRE-VILLE.</span>
+                <div class="flex gap-8 uppercase">
+                    <a href="#" class="hover:text-black transition-colors">Terms & Conditions</a>
+                    <a href="#" class="hover:text-black transition-colors">Privacy Policy</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- ─────────────────────────────────────────
-         SCRIPTS
-    ──────────────────────────────────────────── -->
+    <!-- GSAP / UI Logic -->
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+        const btnCorp = document.getElementById('btn-corporate');
+        const btnSocial = document.getElementById('btn-social');
+        const viewCorp = document.getElementById('view-corporate');
+        const viewSocial = document.getElementById('view-social');
+        const container = document.getElementById('content-container');
+        function switchView(toView, activeBtn, inactiveBtn) {
+            if(activeBtn.classList.contains('active')) return;
 
-        // ── HERO ──────────────────────────────
-        gsap.to("#hero-img-wrap", {
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-            duration: 1.3,
-            ease: "power3.inOut",
-            delay: 0.2
-        });
-        gsap.to("#hero-img", {
-            scale: 1,
-            duration: 10,
-            ease: "power1.out",
-            delay: 0.2
-        });
-        gsap.to(".slide-up", {
-            y: 0,
-            duration: 1.2,
-            stagger: 0.12,
-            ease: "power4.out",
-            delay: 0.6
-        });
-        gsap.to(".fade-up-init", {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            stagger: 0.1,
-            ease: "power3.out",
-            delay: 1.2
-        });
+            activeBtn.classList.add('active');
+            inactiveBtn.classList.remove('active');
 
-        // ── EXPERIENCE SECTION ───────────────
-        gsap.to(".exp-title", {
-            y: 0,
-            duration: 1.2,
-            stagger: 0.12,
-            ease: "power4.out",
-            scrollTrigger: { trigger: "#experience", start: "top 65%" }
-        });
-        gsap.to("#exp-label, #mode-tabs", {
-            opacity: 1, y: 0,
-            duration: 1, stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: { trigger: "#experience", start: "top 70%" }
-        });
+            const fromView = toView === 'corporate' ? viewSocial : viewCorp;
+            const targetView = toView === 'corporate' ? viewCorp : viewSocial;
 
-        // ── HALLS SECTION ────────────────────
-        gsap.to("#halls-img-wrap", {
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-            duration: 1.2,
-            ease: "power3.inOut",
-            scrollTrigger: { trigger: "#halls", start: "top 60%" }
-        });
-        gsap.to(".hall-title", {
-            y: 0,
-            duration: 1.2,
-            stagger: 0.12,
-            ease: "power4.out",
-            scrollTrigger: { trigger: "#halls", start: "top 55%" }
-        });
-        gsap.to("#halls .fade-up-init", {
-            opacity: 1, y: 0,
-            duration: 0.9,
-            stagger: 0.1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: "#halls", start: "top 50%" }
-        });
+            // 1. Prepare Target for height calculation
+            targetView.classList.remove('hidden');
+            targetView.classList.add('absolute', 'top-0', 'left-0');
+            targetView.style.opacity = "0";
+            
+            // 2. Lock current height and handle overflow
+            const currentHeight = container.offsetHeight;
+            container.style.height = currentHeight + 'px';
+            container.style.overflow = 'hidden';
 
-        // ── DIFFERENTIATORS ──────────────────
-        gsap.to(".diff-title", {
-            y: 0,
-            duration: 1.2,
-            stagger: 0.12,
-            ease: "power4.out",
-            scrollTrigger: { trigger: ".diff-title", start: "top 75%" }
+            // 3. Calculate Target Height
+            const newHeight = targetView.scrollHeight;
+
+            // 4. Animate Transitions
+            gsap.to(fromView, { 
+                opacity: 0, 
+                duration: 0.5, 
+                ease: "power2.inOut" 
+            });
+            
+            gsap.to(targetView, { 
+                opacity: 1, 
+                duration: 0.5, 
+                ease: "power2.inOut"
+            });
+
+            gsap.to(container, { 
+                height: newHeight, 
+                duration: 0.5, 
+                ease: "power2.inOut",
+                onComplete: () => {
+                    fromView.classList.add('hidden');
+                    fromView.classList.remove('absolute', 'top-0', 'left-0', 'relative');
+                    
+                    targetView.classList.remove('absolute', 'top-0', 'left-0');
+                    targetView.classList.add('relative');
+                    
+                    container.style.height = 'auto';
+                    container.style.overflow = 'visible';
+                }
+            });
+        }
+
+        btnCorp.addEventListener('click', () => switchView('corporate', btnCorp, btnSocial));
+        btnSocial.addEventListener('click', () => switchView('social', btnSocial, btnCorp));
+
+        // Sync initial height
+        window.addEventListener('load', () => {
+            container.style.height = 'auto';
+            
+            // Hero Reveal Animation
+            gsap.to(".hero-reveal", {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power4.out"
+            });
         });
 
-        // ── MAP ──────────────────────────────
-        gsap.to(".map-title", {
-            y: 0,
-            duration: 1.2,
-            stagger: 0.12,
-            ease: "power4.out",
-            scrollTrigger: { trigger: ".map-title", start: "top 75%" }
-        });
-        gsap.to(".map-line", {
-            strokeDashoffset: 0,
-            duration: 2,
-            ease: "power2.inOut",
-            scrollTrigger: { trigger: ".map-line", start: "top 70%" }
-        });
-        gsap.fromTo(".map-building",
-            { strokeDasharray: "0 600", opacity: 0 },
-            { strokeDasharray: "600 0", opacity: 1, duration: 1.5, delay: 0.8, ease: "power2.out",
-              scrollTrigger: { trigger: ".map-building", start: "top 70%" } }
-        );
-        gsap.fromTo(".map-node, .map-text",
-            { opacity: 0, y: 8 },
-            { opacity: 1, y: 0, duration: 1, stagger: 0.2, delay: 1.5, ease: "power2.out",
-              scrollTrigger: { trigger: ".map-node", start: "top 70%" } }
-        );
-
-        // ── TESTIMONIALS ─────────────────────
-        gsap.to(".testimonial-item", {
-            opacity: 1, y: 0,
-            duration: 1.1,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: { trigger: ".testimonial-item", start: "top 75%" }
-        });
-
-        // ── GALLERY MARQUEE ──────────────────
-        gsap.to("#gallery-strip", {
-            x: "-30%",
-            ease: "none",
-            scrollTrigger: {
-                trigger: "#gallery-strip",
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1.5
+        window.addEventListener('resize', () => {
+            if(container.style.height !== 'auto') {
+                const activeView = btnCorp.classList.contains('active') ? viewCorp : viewSocial;
+                container.style.height = activeView.scrollHeight + 'px';
             }
-        });
-
-        // ── HALL HOVER LIST ──────────────────
-        const hallItems  = document.querySelectorAll('.hall-item');
-        const hallImages = document.querySelectorAll('.hall-preview-img');
-        hallItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                const target = item.getAttribute('data-target');
-                hallImages.forEach(img => {
-                    img.classList.toggle('active', img.getAttribute('data-hall') === target);
-                });
-            });
-        });
-
-        // ── MODE TABS (Social / Corporate) ────
-        const modeBtns   = document.querySelectorAll('.mode-btn');
-        const modePanels = document.querySelectorAll('.mode-panel');
-        modeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const mode = btn.getAttribute('data-mode');
-                modeBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                modePanels.forEach(p => {
-                    p.classList.toggle('active', p.id === `panel-${mode}`);
-                });
-            });
         });
     </script>
 </body>

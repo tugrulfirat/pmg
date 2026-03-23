@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartier Boardroom | Plaza Centre-Ville</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+        }
+        .h-bold { font-weight: 700; letter-spacing: -0.02em; }
+        .img-editorial {
+            filter: contrast(1.05) saturate(0.85) brightness(0.98);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1a1a1a;
+            border-radius: 9999px;
+            padding: 0.6rem 1.8rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            background: transparent;
+            color: #1a1a1a;
+        }
+        .btn-outline:hover { background: #1a1a1a; color: #fff; }
+        
+        /* Table Styles */
+        .spec-table th {
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #999;
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .spec-table td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #eee;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-[#fafafa]">
+    
+    <!-- Top Navigation -->
+    <nav class="absolute top-0 w-full z-50 flex justify-between items-center px-6 py-6 text-white overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent pointer-events-none -z-10"></div>
+        <button class="flex items-center justify-center w-10 h-10 border border-white/30 rounded-full hover:bg-white/10 transition backdrop-blur-sm" onclick="window.history.back()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <span class="text-xl font-bold tracking-tight">PLAZA CENTRE-VILLE</span>
+        <div class="flex items-center gap-4">
+            <button class="px-6 py-2 bg-[#F5F0E8] text-[#1a1a1a] font-bold text-xs uppercase tracking-widest rounded-full shadow-lg hover:bg-white transition-all transform hover:scale-105">Inquire</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-[80vh] w-full overflow-hidden">
+        <img src="images/cartier_hero_premium.png" alt="Cartier Boardroom Executive Strategy" class="absolute inset-0 w-full h-full object-cover img-editorial">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div class="relative z-10 h-full max-w-[1400px] mx-auto px-6 flex flex-col justify-end pb-24">
+            <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-white/50 mb-4">The Strategy Hub</span>
+            <h1 class="text-5xl md:text-8xl h-bold text-white mb-6">Cartier Boardroom</h1>
+            <p class="text-lg md:text-xl text-white/70 font-light max-w-2xl leading-relaxed">
+                Precision infrastructure for high-stakes decisions. The Cartier Boardroom is Montreal's premier destination for executive retreat and corporate focus.
+            </p>
+        </div>
+    </header>
+
+    <!-- Quick Specs Bar -->
+    <section class="bg-white border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Max Capacity</span>
+                <span class="text-2xl h-bold">260 Guests</span>
+            </div>
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Floor Area</span>
+                <span class="text-2xl h-bold">2,400 SQ FT</span>
+            </div>
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Ceiling Height</span>
+                <span class="text-2xl h-bold">11 FT</span>
+            </div>
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Integrated Tech</span>
+                <span class="text-2xl h-bold">Pro AV & 10GbE</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Insight / Story -->
+    <section class="py-32">
+        <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            <div class="order-2 lg:order-1 relative h-[600px]">
+                <img src="images/unified_insight_3_authentic_1773677691749.png" alt="Executive Layout" class="absolute inset-0 w-full h-full object-cover img-editorial shadow-2xl">
+                <div class="absolute -bottom-8 -right-8 bg-white text-[#1a1a1a] p-12 max-w-sm hidden lg:block border border-gray-100 shadow-xl">
+                    <p class="text-2xl font-light italic leading-relaxed">"The level of focus and professional support we get in the Cartier suite is unmatched for our annual quarterly strategy."</p>
+                    <div class="h-10 w-px bg-[#B58B5D] my-6"></div>
+                    <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">— CEO, Tech Innovate Inc.</p>
+                </div>
+            </div>
+            <div class="order-1 lg:order-2">
+                <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-[#3A3F47] block mb-8">Executive Environment</span>
+                <h2 class="text-4xl md:text-6xl h-bold mb-10 leading-tight">Built for <br>High Performance.</h2>
+                <div class="space-y-6 text-gray-600 leading-relaxed text-lg">
+                    <p>Cartier is more than a meeting room; it’s an efficiency hub. Every aspect of the space is optimized for clarity and focus, from the sound-dampened acoustics to the ergonomic furniture configurations.</p>
+                    <p>Designed to support executive strategy sessions, Cartier features integrated high-speed fiber-optic connectivity and advanced AV capabilities. Whether it’s a high-impact presentation or a collaborative board meeting, the infrastructure is built for zero-latency execution.</p>
+                </div>
+                <div class="mt-12 flex gap-6">
+                    <div class="flex-1 p-8 bg-[#fdfdfd] border border-gray-100 shadow-sm">
+                        <span class="text-[9px] uppercase tracking-widest font-bold text-gray-400 block mb-4">Modular Cartier AB</span>
+                        <p class="text-sm">Easily split the boardroom into two independent rooms for breakout sessions or smaller committee meetings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capacity Grid -->
+    <section class="py-24 bg-white">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="flex items-end justify-between mb-12 border-b border-gray-100 pb-8">
+                <div>
+                    <span class="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 block mb-2">Configurations</span>
+                    <h3 class="text-3xl h-bold">Venue Capacities</h3>
+                </div>
+                <p class="text-xs text-gray-400 font-medium">Cartier A & B Combined (2,400 sq ft)</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="p-8 border border-gray-100 bg-gray-50/50">
+                    <p class="text-[9px] uppercase tracking-widest font-bold text-gray-400 mb-6">Strategy & Discussion</p>
+                    <div class="space-y-4">
+                        <div class="flex justify-between border-b border-gray-200 pb-2"><span class="font-medium">Boardroom</span><span>80 Guests</span></div>
+                        <div class="flex justify-between border-b border-gray-200 pb-2"><span class="font-medium">U-Shape</span><span>60 Guests</span></div>
+                        <div class="flex justify-between pb-2"><span class="font-medium">Classroom</span><span>180 Guests</span></div>
+                    </div>
+                </div>
+                <div class="p-8 border border-gray-100 bg-white">
+                    <p class="text-[9px] uppercase tracking-widest font-bold text-gray-400 mb-6">Reception & Gala</p>
+                    <div class="space-y-4">
+                        <div class="flex justify-between border-b border-gray-200 pb-2"><span class="font-medium">Cocktail</span><span>380 Guests</span></div>
+                        <div class="flex justify-between border-b border-gray-200 pb-2"><span class="font-medium">Banquet</span><span>240 Guests</span></div>
+                        <div class="flex justify-between pb-2"><span class="font-medium">Theater</span><span>260 Guests</span></div>
+                    </div>
+                </div>
+                <div class="p-8 border border-gray-100 bg-gray-50/50">
+                    <p class="text-[9px] uppercase tracking-widest font-bold text-gray-400 mb-6">Amenity Access</p>
+                    <ul class="text-xs space-y-3 font-medium text-gray-600">
+                        <li>&middot; Dedicated Foyer Access</li>
+                        <li>&middot; Climate Controlled Precision</li>
+                        <li>&middot; Professional Sound Masking</li>
+                        <li>&middot; Built-in Projection Systems</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Action -->
+    <section class="py-40 bg-white text-center">
+        <div class="inline-block h-20 w-px bg-gray-200 mb-12"></div>
+        <h2 class="text-3xl h-bold mb-8">Execute your next strategy here.</h2>
+        <a href="#" class="btn-outline">Download Plan PDF</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-12 border-t border-gray-100">
+        <div class="max-w-[1400px] mx-auto px-6 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            <span>PLAZA CENTRE-VILLE</span>
+            <span>&copy; 2026</span>
+        </div>
+    </footer>
+
+</body>
+</html>

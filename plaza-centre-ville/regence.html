@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Régence Suite | Plaza Centre-Ville</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+        }
+        .h-bold { font-weight: 700; letter-spacing: -0.02em; }
+        .img-editorial {
+            filter: contrast(1.05) saturate(0.85) brightness(0.98);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1a1a1a;
+            border-radius: 9999px;
+            padding: 0.6rem 1.8rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            background: transparent;
+            color: #1a1a1a;
+        }
+        .btn-outline:hover { background: #1a1a1a; color: #fff; }
+        
+        /* Table Styles */
+        .spec-table th {
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #999;
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .spec-table td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #eee;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-[#fafafa]">
+    
+    <!-- Top Navigation -->
+    <nav class="absolute top-0 w-full z-50 flex justify-between items-center px-6 py-6 text-white overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent pointer-events-none -z-10"></div>
+        <button class="flex items-center justify-center w-10 h-10 border border-white/30 rounded-full hover:bg-white/10 transition backdrop-blur-sm" onclick="window.history.back()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <span class="text-xl font-bold tracking-tight">PLAZA CENTRE-VILLE</span>
+        <div class="flex items-center gap-4">
+            <button class="px-6 py-2 bg-[#F5F0E8] text-[#1a1a1a] font-bold text-xs uppercase tracking-widest rounded-full shadow-lg hover:bg-white transition-all transform hover:scale-105">Inquire</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-[80vh] w-full overflow-hidden">
+        <img src="images/regence_hero_premium.png" alt="Régence Suite Grand Ballroom" class="absolute inset-0 w-full h-full object-cover img-editorial">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div class="relative z-10 h-full max-w-[1400px] mx-auto px-6 flex flex-col justify-end pb-24">
+            <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-white/60 mb-4">The Grand Ballroom</span>
+            <h1 class="text-5xl md:text-8xl h-bold text-white mb-6">Régence Suite</h1>
+            <p class="text-lg md:text-xl text-white/70 font-light max-w-2xl leading-relaxed">
+                8,340 square feet of pillar-free grandeur. Where Montreal's most significant conventions and celebrations find their home.
+            </p>
+        </div>
+    </header>
+
+    <!-- Quick Specs -->
+    <section class="bg-white border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Max Capacity</span>
+                <span class="text-2xl h-bold">1,400 Guests</span>
+            </div>
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Floor Area</span>
+                <span class="text-2xl h-bold">8,340 SQ FT</span>
+            </div>
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Ceiling Height</span>
+                <span class="text-2xl h-bold">15 FT</span>
+            </div>
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Configuration</span>
+                <span class="text-2xl h-bold">3 Modular Units</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Story / Deep Dive -->
+    <section class="py-32">
+        <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            <div>
+                <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-[#B58B5D] block mb-8">Architectural Narrative</span>
+                <h2 class="text-4xl md:text-6xl h-bold mb-10 leading-tight">Civic Scale. <br>Boutique Precision.</h2>
+                <div class="space-y-6 text-gray-600 leading-relaxed text-lg">
+                    <p>Designed for impact, the Régence Suite combines the vast scale of a convention center with the nuanced detailing of a luxury hotel. The space is defined by its massive, pillar-free floor plan, ensuring pristine sightlines for every attendee.</p>
+                    <p>At the far end, a grand, stylish staircase provides a cinematic entrance for keynote speakers and wedding parties alike, while elegant crystal chandeliers and adjustable LED mood lighting allow for precise atmospheric control—from cool corporate focus to warm celebratory glows.</p>
+                </div>
+                <div class="mt-12 flex gap-6">
+                    <div class="flex-1 p-8 bg-white border border-gray-100 shadow-sm">
+                        <span class="text-[9px] uppercase tracking-widest font-bold text-gray-400 block mb-4">Total Versatility</span>
+                        <p class="text-sm">Divide into Regence A, B, and C for simultaneous breakout sessions or intimate banquets.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="relative h-[600px]">
+                <img src="images/luxury_av_detail.png" alt="AV Precision" class="absolute inset-0 w-full h-full object-cover img-editorial shadow-2xl">
+                <div class="absolute -bottom-8 -left-8 bg-black text-white p-12 max-w-sm hidden lg:block">
+                    <p class="text-2xl font-light italic leading-relaxed">"The pillar-free design and professional lighting changed how we viewed large-scale events in Montreal."</p>
+                    <p class="mt-6 text-[10px] uppercase tracking-widest font-bold text-gray-400">— Head of Global Conventions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capacity Table -->
+    <section class="py-24 bg-white">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <h3 class="text-2xl h-bold mb-12">Capacity & Layouts</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full spec-table">
+                    <thead>
+                        <tr>
+                            <th>Layout</th>
+                            <th>Total (ABC)</th>
+                            <th>Unit A / C</th>
+                            <th>Unit B (Center)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Theater</td>
+                            <td>1,400</td>
+                            <td>450</td>
+                            <td>500</td>
+                        </tr>
+                        <tr>
+                            <td>Banquet</td>
+                            <td>1,200</td>
+                            <td>380</td>
+                            <td>440</td>
+                        </tr>
+                        <tr>
+                            <td>Classroom</td>
+                            <td>620</td>
+                            <td>200</td>
+                            <td>220</td>
+                        </tr>
+                        <tr>
+                            <td>U-Shape</td>
+                            <td>175</td>
+                            <td>55</td>
+                            <td>65</td>
+                        </tr>
+                        <tr>
+                            <td>Cocktail</td>
+                            <td>1,500+</td>
+                            <td>500</td>
+                            <td>500</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-32 bg-[#1a1a1a] text-white text-center px-6">
+        <h2 class="text-3xl md:text-5xl h-bold mb-8">Ready to host at scale?</h2>
+        <p class="text-gray-400 mb-12 max-w-2xl mx-auto">Get in touch with our event strategists to discuss your Régence Suite configurations.</p>
+        <button class="px-10 py-4 bg-[#F5F0E8] text-[#1a1a1a] font-bold text-xs uppercase tracking-[0.2em] rounded-full hover:bg-white transition-all transform hover:scale-105">Request a Proposal</button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-12 border-t border-gray-100">
+        <div class="max-w-[1400px] mx-auto px-6 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            <span>PLAZA CENTRE-VILLE</span>
+            <span>&copy; 2026</span>
+        </div>
+    </footer>
+
+</body>
+</html>
